@@ -1,9 +1,7 @@
 /**
  * 
  */
-package derivados;
-
-import primitivos.Ponto;
+package primitivos;
 
 /**
  * @author ra00170556
@@ -43,5 +41,13 @@ public class Reta {
 	public void setB(Ponto b) {
 		this.b = b;
 		this.calcularCoeficienteAngular(this.a, this.b);
+	}
+
+	public Double getCoeficienteAngular() {
+		return coeficienteAngular;
+	}
+
+	public void setCoeficienteAngular(Double coeficienteAngular) {
+		this.coeficienteAngular = coeficienteAngular;
 	}	
 }

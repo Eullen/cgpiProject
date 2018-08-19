@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import primitivos.PontoGr;
 
 public class PontoComMouseGui  {
-	int indicePonto=1;
+	int indicePonto = 1;
 
 	public PontoComMouseGui(Stage palco) {
 
