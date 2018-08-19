@@ -1,7 +1,7 @@
 package app;
 
 
-import gui.PontoComMouseGui;
+import gui.PontoComMouseGui2;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -11,13 +11,14 @@ import javafx.stage.Stage;
  */
 
 public class Aplicacao extends Application{
+	
      public static void main (String args[]) {
         launch(args);
     }
 
     @Override
     public void start(Stage palco) throws Exception {
-        new PontoComMouseGui(palco);
+        new PontoComMouseGui2(palco);
     }
 }
 

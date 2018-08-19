@@ -7,7 +7,7 @@ public class Ponto extends Point2D{
 		super(0, 0);
 	}
 
-	Ponto (double x, double y) {
+	public Ponto (double x, double y) {
 		super(x, y);
 	}
 
