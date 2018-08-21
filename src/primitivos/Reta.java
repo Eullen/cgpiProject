@@ -21,7 +21,8 @@ public class Reta {
 		this.calcularCoeficienteAngular(a, b);
 	}
 
-	private void calcularCoeficienteAngular (Ponto a, Ponto b){	
+	private void calcularCoeficienteAngular (Ponto a, Ponto b){
+		// TODO: Implementar : a.getx() - b.getx() != 0
 		this.coeficienteAngular = (a.gety()- b.gety())/(a.getx()- b.getx());
 	}
 
