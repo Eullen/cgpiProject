@@ -20,6 +20,8 @@ import primitivos.Reta;
 
 public class PontoComMouseGui2 {
 	Ponto pontoSelecionado = null;
+	private int xOrigin = -1;
+	private int yOrigin = -1;
 	
 	public PontoComMouseGui2(Stage palco) {
 
@@ -52,8 +54,8 @@ public class PontoComMouseGui2 {
 			int x, y;
 
 			if (event.getButton() == MouseButton.PRIMARY) {
-				x = (int)event.getX();
-				y = (int)event.getY();
+				xOrigin = x = (int)event.getX();
+				yOrigin = y = (int)event.getY();
 				
 				if(pontoSelecionado == null){
 					pontoSelecionado = new Ponto(x, y);
@@ -62,6 +64,24 @@ public class PontoComMouseGui2 {
 					desenharPontos(gc, RetaCalculador.obterPontos(reta));
 					pontoSelecionado = null;
 				}
+			}
+		});
+
+		// Evento de Release do mouse, será um clicar e arrastar
+        // TODO: Refatorar o código acima para que o click só seja contabilizado se não passar por esse bloco de código
+		canvas.setOnMouseReleased(event -> {
+			if(xOrigin != -1 && yOrigin != -1){
+				int xRelease, yRelease;
+
+				xRelease = (int)event.getX();
+				yRelease = (int)event.getY();
+
+				int pMedio = (xRelease + xOrigin)/2;
+				int yMedio = (yRelease + yOrigin)/2;
+
+                double equacao = Math.pow((xRelease - xOrigin),2) + Math.pow((yRelease - yOrigin),2);
+				int raio =  (int) Math.sqrt(equacao); // TODO: Raio vai ser int? Double?
+				//desenharPontos(gc, CirculoCalculador.obterPontos(circulo));
 			}
 		});
 
