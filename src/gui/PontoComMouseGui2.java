@@ -1,7 +1,9 @@
 package gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import calculadores.CirculoCalculador;
 import calculadores.RetaCalculador;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,110 +16,106 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import primitivos.Circulo;
 import primitivos.Ponto;
 import primitivos.PontoGr;
 import primitivos.Reta;
 
 public class PontoComMouseGui2 {
-	Ponto pontoSelecionado = null;
-	private int xOrigin = -1;
-	private int yOrigin = -1;
-	
-	public PontoComMouseGui2(Stage palco) {
+    Ponto pontoSelecionado = null;
+    private Stage palco;
 
-		// define titulo da janela
-		palco.setTitle("Testa Mouse");
+    public PontoComMouseGui2(Stage palco) {
 
-		// define largura e altura da janela
-		palco.setWidth(500);
-		palco.setHeight(500);
+        this.palco = palco;
+        // define titulo da janela
+        palco.setTitle("Testa Mouse");
 
-		// Painel para os componentes
-		BorderPane pane = new BorderPane();
+        // define largura e altura da janela
+        palco.setWidth(500);
+        palco.setHeight(500);
 
-		// componente para desenho
-		Canvas canvas = new Canvas(500, 500);
+        // Painel para os componentes
+        BorderPane pane = new BorderPane();
 
-		// componente para desenhar graficos
-		
-		GraphicsContext gc;
-		gc = canvas.getGraphicsContext2D();
+        // componente para desenho
+        Canvas canvas = new Canvas(500, 500);
 
-		// Eventos de mouse
-		// trata mouseMoved
-		canvas.setOnMouseMoved(event -> {
-			palco.setTitle("Testa Mouse (Pressione botao do Mouse):"+" (" + (int)event.getX() + ", " + (int)event.getY() + ")");
-		});
+        // componente para desenhar graficos
+        GraphicsContext gc;
+        gc = canvas.getGraphicsContext2D();
 
-		// trata mousePressed
-		canvas.setOnMousePressed(event -> {
-			int x, y;
+        canvas.setOnMouseMoved(event -> {
+            palco.setTitle("Testa Mouse (Pressione botao do Mouse):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
+        });
 
-			if (event.getButton() == MouseButton.PRIMARY) {
-				xOrigin = x = (int)event.getX();
-				yOrigin = y = (int)event.getY();
-				
-				if(pontoSelecionado == null){
-					pontoSelecionado = new Ponto(x, y);
-				}else{
-					Reta reta = new Reta(pontoSelecionado, new Ponto(x,y));
-					desenharPontos(gc, RetaCalculador.obterPontos(reta));
-					pontoSelecionado = null;
-				}
-			}
-		});
+        canvas.setOnMousePressed(event -> {
+            int x, y;
 
-		// Evento de Release do mouse, será um clicar e arrastar
-        // TODO: Refatorar o código acima para que o click só seja contabilizado se não passar por esse bloco de código
-		canvas.setOnMouseReleased(event -> {
-			if(xOrigin != -1 && yOrigin != -1){
-				int xRelease, yRelease;
+            if (event.getButton() == MouseButton.PRIMARY) {
+                x = (int) event.getX();
+                y = (int) event.getY();
+                if (pontoSelecionado == null) {
+                    pontoSelecionado = new Ponto(x, y);
+                }
+                else {
+                    Ponto pontoFinal = new Ponto(event.getX(), event.getY());
+                    Ponto pontoMedio = this.obterPontoMedio(pontoFinal);
+                    CirculoCalculador calc = new CirculoCalculador();
+                    Circulo circulo = new Circulo(calc.obterRaio(pontoMedio, pontoFinal), pontoMedio);
+                    List<Ponto> pontos = calc.obterPontos(circulo);
+                    this.pontoSelecionado = null;
+                    desenharPontos(gc, pontos);
+                }
+                /*else {
+                    Reta reta = new Reta(pontoSelecionado, new Ponto(x, y));
+                    desenharPontos(gc, RetaCalculador.obterPontos(reta));
+                    pontoSelecionado = null;
+                }*/
+            }
+        });
 
-				xRelease = (int)event.getX();
-				yRelease = (int)event.getY();
+        // atributos do painel
+        pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.setCenter(canvas); // posiciona o componente de desenho
 
-				int pMedio = (xRelease + xOrigin)/2;
-				int yMedio = (yRelease + yOrigin)/2;
+        // cria e insere cena
+        Scene scene = new Scene(pane);
+        palco.setScene(scene);
+        palco.show();
+    }
 
-                double equacao = Math.pow((xRelease - xOrigin),2) + Math.pow((yRelease - yOrigin),2);
-				int raio =  (int) Math.sqrt(equacao); // TODO: Raio vai ser int? Double?
-				//desenharPontos(gc, CirculoCalculador.obterPontos(circulo));
-			}
-		});
+    private Ponto obterPontoMedio(Ponto pontoFinal) {
+        Ponto pontoInicial = this.pontoSelecionado;
+        int xMedio = (int) ((pontoFinal.getx() + pontoInicial.getx()) / 2);
+        int yMedio = (int) ((pontoFinal.gety() + pontoInicial.gety()) / 2);
+        Ponto pontoMedio = new Ponto(xMedio, yMedio);
+        return pontoMedio;
+    }
 
-		// atributos do painel
-		pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
-		pane.setCenter(canvas); // posiciona o componente de desenho
-		
-		// cria e insere cena
-		Scene scene = new Scene(pane);
-		palco.setScene(scene);
-		palco.show();	
-	}
+    private void desenharPontos(GraphicsContext gc, List<Ponto> pontos) {
+        for (Ponto p : pontos) {
+            desenharPonto(gc, (int) Math.floor(p.getx()), (int) Math.floor(p.gety()), 6, "", Color.BLACK);
+        }
+    }
 
-	private void desenharPontos(GraphicsContext gc, List<Ponto> pontos) {
-		for(Ponto p : pontos){
-			desenharPonto(gc, (int) Math.floor(p.getx()), (int) Math.floor(p.gety()), 6, "", Color.BLACK);
-		}
-	}
+    /**
+     * Desenha um ponto grafico
+     *
+     * @param g        contexto grafico
+     * @param x        posicao x
+     * @param y        posicao y
+     * @param diametro diametro do ponto
+     * @param nome     nome do ponto
+     * @param cor      cor do ponto
+     */
+    public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {
+        PontoGr p;
 
-	/**
-	 * Desenha um ponto grafico 
-	 * 
-	 * @param g contexto grafico
-	 * @param x posicao x
-	 * @param y posicao y
-	 * @param diametro diametro do ponto
-	 * @param nome nome do ponto
-	 * @param cor cor do ponto
-	 */
-	public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {
-		PontoGr p; 
+        // Cria um ponto
+        p = new PontoGr(x, y, cor, nome, diametro);
 
-		// Cria um ponto
-		p = new PontoGr(x, y, cor, nome, diametro);
-
-		// Desenha o ponto
-		p.desenharPonto(g);
-	}
+        // Desenha o ponto
+        p.desenharPonto(g);
+    }
 }

@@ -1,4 +1,5 @@
 package gui;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -12,80 +13,80 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.PontoGr;
 
-public class PontoComMouseGui  {
-	int indicePonto = 1;
+public class PontoComMouseGui {
+    int indicePonto = 1;
 
-	public PontoComMouseGui(Stage palco) {
+    public PontoComMouseGui(Stage palco) {
 
-		// define titulo da janela
-		palco.setTitle("Testa Mouse");
+        //define titulo da janela
+        palco.setTitle("Testa Mouse");
 
-		// define largura e altura da janela
-		palco.setWidth(500);
-		palco.setHeight(500);
+        //define largura e altura da janela
+        palco.setWidth(500);
+        palco.setHeight(500);
 
-		// Painel para os componentes
-		BorderPane pane = new BorderPane();
+        //Painel para os componentes
+        BorderPane pane = new BorderPane();
 
-		// componente para desenho
-		Canvas canvas = new Canvas(500, 500);
+        //componente para desenho
+        Canvas canvas = new Canvas(500, 500);
 
-		// componente para desenhar graficos
-		
-		GraphicsContext gc;
-		gc = canvas.getGraphicsContext2D();
+        //componente para desenhar graficos
 
-		// Eventos de mouse
-		// trata mouseMoved
-		canvas.setOnMouseMoved(event -> {
-			palco.setTitle("Testa Mouse (Pressione botao do Mouse):"+" (" + (int)event.getX() + ", " + (int)event.getY() + ")");
-		});
+        GraphicsContext gc;
+        gc = canvas.getGraphicsContext2D();
 
-		// trata mousePressed
-		canvas.setOnMousePressed(event -> {
-			int x, y;
+        //Eventos de mouse
+        //trata mouseMoved
+        canvas.setOnMouseMoved(event -> {
+            palco.setTitle("Testa Mouse (Pressione botao do Mouse):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
+        });
 
-			if (event.getButton() == MouseButton.PRIMARY) {
-				x = (int)event.getX();
-				y = (int)event.getY();
-				// desenha ponto na posicao clicada
-				desenharPonto(gc, x, y, 6, "P"+indicePonto, Color.BLUE);
-				indicePonto++;
-			} else if (event.getButton() == MouseButton.SECONDARY) {
-				x = (int)event.getX();
-				y = (int)event.getY();
-				// desenha ponto na posicao clicada
-				desenharPonto(gc, x, y, 6, "("+ x + ", " + y +")", Color.RED);
-			}
-		});
+        //trata mousePressed
+        canvas.setOnMousePressed(event -> {
+            int x, y;
 
-		// atributos do painel
-		pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
-		pane.setCenter(canvas); // posiciona o componente de desenho
-		
-		// cria e insere cena
-		Scene scene = new Scene(pane);
-		palco.setScene(scene);
-		palco.show();	
-	}
+            if (event.getButton() == MouseButton.PRIMARY) {
+                x = (int) event.getX();
+                y = (int) event.getY();
+                //desenha ponto na posicao clicada
+                desenharPonto(gc, x, y, 6, "P" + indicePonto, Color.BLUE);
+                indicePonto++;
+            } else if (event.getButton() == MouseButton.SECONDARY) {
+                x = (int) event.getX();
+                y = (int) event.getY();
+                //desenha ponto na posicao clicada
+                desenharPonto(gc, x, y, 6, "(" + x + ", " + y + ")", Color.RED);
+            }
+        });
 
-	/**
-	 * Desenha um ponto grafico 
-	 * 
-	 * @param g contexto grafico
-	 * @param x posicao x
-	 * @param y posicao y
-	 * @param diametro diametro do ponto
-	 * @param nome nome do ponto
-	 * @param cor cor do ponto
-	 */
-	public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {
-		PontoGr p; 
+        //atributos do painel
+        pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.setCenter(canvas); // posiciona o componente de desenho
 
-		// Cria um ponto
-		p = new PontoGr(x, y, cor, nome, diametro);
+        //cria e insere cena
+        Scene scene = new Scene(pane);
+        palco.setScene(scene);
+        palco.show();
+    }
 
-		// Desenha o ponto
-		p.desenharPonto(g);
-	}
+    /**
+     * Desenha um ponto grafico
+     *
+     * @param g        contexto grafico
+     * @param x        posicao x
+     * @param y        posicao y
+     * @param diametro diametro do ponto
+     * @param nome     nome do ponto
+     * @param cor      cor do ponto
+     */
+    public void desenharPonto(GraphicsContext g, int x, int y, int diametro, String nome, Color cor) {
+        PontoGr p;
+
+        // Cria um ponto
+        p = new PontoGr(x, y, cor, nome, diametro);
+
+        // Desenha o ponto
+        p.desenharPonto(g);
+    }
 }
