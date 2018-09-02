@@ -24,46 +24,46 @@ public class CirculoCalculador {
 
         //TODO: Arrumar
         /*
-         *
+         * 
          * for (iAngulo = 0; iAngulo <= 45; iAngulo = iAngulo + 0.125) {
-
+			
 			dSeno = Math.sin( Math.toRadians(iAngulo));
 			dCosseno = Math.cos( Math.toRadians(iAngulo));
-
+			
 			dX = new Double( dRaio *  dCosseno).intValue();
 			dY = new Double( dRaio * dSeno).intValue();
-
-			//Cï¿½lculo por octante dos pontos:
+			
+			//Cálculo por octante dos pontos:
 			//Ponto(x,y)
 			alCoordenadas.add( new int [] {iCentroX + dX, iCentroY + dY} );
-
+			
 			//Ponto(-x, y)
 			alCoordenadas.add( new int [] {iCentroX - dX, iCentroY + dY} );
-
+			
 			//Ponto(x, -y)
 			alCoordenadas.add( new int [] {iCentroX + dX, iCentroY - dY} );
-
+			
 			//Ponto(-x, -y)
 			alCoordenadas.add( new int [] {iCentroX - dX, iCentroY - dY} );
-
+			
 			//Ponto (y, x)
 			alCoordenadas.add( new int [] {iCentroX + dY, iCentroY + dX} );
-
+			
 			//Ponto (-y, x)
 			alCoordenadas.add( new int [] {iCentroX - dY, iCentroY + dX} );
-
+			
 			//Ponto (y, -x)
 			alCoordenadas.add( new int [] {iCentroX + dY, iCentroY - dX} );
-
+			
 			//Ponto(-y, -x)
 			alCoordenadas.add( new int [] {iCentroX - dY, iCentroY - dX} );
-
+			
 		}
-
+		
 		return alCoordenadas;
 	}
          * */
-
+        
         return pontos;
     }
 

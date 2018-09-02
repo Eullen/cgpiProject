@@ -1,4 +1,9 @@
-## Especifica√ß√µes da Atividade 
+## Alunos
+Eullen Silva 
+Arthur Carvalho
+Jo„o Marcelo Ferreira
+
+## EspecificaÁıes da Atividade 
 
 ## Tarefa 1
 
@@ -8,8 +13,11 @@
      
         Utilizando dois pontos desenhar um segmento.
 
-- C√≠rculo
+- CÌrculo
 
          Utilizando ponto do centro e segundo ponto para definir o raio, ent√£o desenhar o c√≠rculo.
 
 
+## Tarefa 2
+
+Desenhar a curva do drag„o usando os componentes desenvolvidos na tarefa 1
