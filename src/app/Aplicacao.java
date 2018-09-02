@@ -1,8 +1,8 @@
 package app;
 
+import gui.TelaCurvaDoDragao;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import gui.PontoComMouseGui2;
 
 public class Aplicacao extends Application {
 
@@ -15,7 +15,6 @@ public class Aplicacao extends Application {
     @Override
     public void start(Stage palco) throws Exception {
         this.palco = palco;
-        new PontoComMouseGui2(palco);
+        new TelaCurvaDoDragao(palco);
     }
 }
-
