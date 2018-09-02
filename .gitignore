@@ -44,3 +44,9 @@ local.properties
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+
+#project.iml
+./project.iml
+
+#out folder
+out/
