@@ -3,6 +3,7 @@ package gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.impl.ior.iiop.AlternateIIOPAddressComponentImpl;
 import com.sun.xml.internal.ws.util.StringUtils;
 
 import calculadores.CalculadorGenerico;
@@ -13,6 +14,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -115,8 +120,13 @@ public class TelaPrincipal{
         canvas.setOnMousePressed(event -> {
             if (event.getButton() == MouseButton.PRIMARY && tipoDesenho != null) {
             	if (tipoDesenho.equals(menuCurvaDragao.getText())) {
+            		if (iteracoesCurvaDragao <= 17) {
             		preencherCanvasCurvaDoDragão();
             		this.iteracoesCurvaDragao += 1;
+            		}else {
+            			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.", ButtonType.FINISH);
+            			alerta.show();
+            		}
             	}else {
             		preencherCanvasBasico(new Ponto(event.getX(),event.getY()));             		
             	}
@@ -140,8 +150,9 @@ public class TelaPrincipal{
 					pontoSelecionado = pt;
 				}else{
 					Reta reta = new Reta(pontoSelecionado, pt);
-		            pontos = RetaCalculador.obterPontos(reta);	
-		            pontoSelecionado = null;
+		            //pontos = RetaCalculador.obterPontos(reta);	
+		            pontos = RetaCalculador.obterPontosAlgoritmoMidPoint(reta);
+					pontoSelecionado = null;
 				}
 	            break;
 			case "Círculos":
@@ -151,7 +162,7 @@ public class TelaPrincipal{
 					Ponto pontoMedio = CalculadorGenerico.obterPontoMedio(pontoSelecionado, pt);
 					int raio = CirculoCalculador.obterRaio(pontoMedio, pt);
 					Circulo circulo = new Circulo(raio, pontoMedio);
-					pontos = CirculoCalculador.obterPontos(circulo);
+					pontos = CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo);
 					pontoSelecionado = null;
 				}
 				break;
@@ -165,16 +176,23 @@ public class TelaPrincipal{
 		limparCanvas();
 		Reta reta = new Reta(new Ponto(150,400), new Ponto(600,400));
 		CurvaDoDragaoCalculador calc = new CurvaDoDragaoCalculador(reta, this.iteracoesCurvaDragao);
-	    List <Reta> retasCurvaDragao = calc.getRetasCurva();
+	    List<Reta> retasCurvaDragao;
+		
+	    try {
+			retasCurvaDragao = calc.getRetasCurva();
+			for (Reta retaCalc : retasCurvaDragao){
+		    	desenharPontos(RetaCalculador.obterPontos(retaCalc));	
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	
-	    for (Reta retaCalc : retasCurvaDragao){
-	    	desenharPontos(RetaCalculador.obterPontos(retaCalc));	
-	    }
+	    
 	}
 	
     private void desenharPontos( List<Ponto> pontos) {
         for (Ponto p : pontos) {
-            desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), 5, "", Color.BLACK);
+            desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), 3, "", Color.BLACK);
         }
     }
 
