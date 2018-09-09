@@ -86,8 +86,6 @@ public class RetaCalculador {
 		y = y1;
 		pontos.add(new Ponto(0,0));
 		if (dx > dy) {
-//			ponto=new PontoGr(x,y,corReta,nomeReta, espessura);
-//			ponto.desenharPonto(g);
 			pontos.add(new Ponto(x,y));
 			e = 2 * dy-dx;
 			inc1 = 2*(dy-dx);
@@ -104,8 +102,6 @@ public class RetaCalculador {
 			}
 
 		} else {
-//			ponto=new PontoGr(x,y,corReta,nomeReta, espessura);
-//			ponto.desenharPonto(g);
 			pontos.add(new Ponto(x,y));
 			e = 2*dx-dy;
 			inc1 = 2*(dx-dy);
@@ -118,8 +114,6 @@ public class RetaCalculador {
 				else
 					e += inc2;
 				y += incy;
-//				ponto=new PontoGr(x,y,corReta,nomeReta, espessura);
-//				ponto.desenharPonto(g);
 				pontos.add(new Ponto(x,y));
 			}
 		}

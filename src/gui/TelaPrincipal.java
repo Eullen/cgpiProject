@@ -17,15 +17,24 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.Circulo;
@@ -48,6 +57,8 @@ public class TelaPrincipal{
     private String tipoDesenho;
     private GraphicsContext gc;
     private Canvas canvas;
+    private Color cor;
+    private int diametro;
     private int iteracoesCurvaDragao;
 	
 	public TelaPrincipal(Stage palco) {
@@ -78,12 +89,17 @@ public class TelaPrincipal{
     	opcoes.getItems().add(menuLimpar);
     	menu.getMenus().addAll(desenho,opcoes);
     	
+    	//Criando footer
+    	GridPane grid = montarMenuOpcoesGraficas();
+    	VBox menus = new VBox();
+    	menus.getChildren().addAll(menu,grid);
+    	
     	atribuirEventosAosComponentesGraficos();
         
     	// atributos do painel
         pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setCenter(canvas); // posiciona o componente de desenho
-        pane.setTop(menu);
+        pane.setTop(menus);
         // cria e insere cena
         Scene scene = new Scene(pane);
         palco.setScene(scene);
@@ -138,6 +154,32 @@ public class TelaPrincipal{
 		this.gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 	
+	private GridPane montarMenuOpcoesGraficas() {
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(5));
+		grid.setHgap(5);
+		
+		// Color Picker 
+		ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+		colorPicker.setOnAction(e->{
+			cor = colorPicker.getValue();
+		});
+		
+		Spinner<Integer> diametroLinhas = new Spinner<Integer>();
+		SpinnerValueFactory<Integer> diametros = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,20,3);
+		diametroLinhas.setValueFactory(diametros);
+		diametroLinhas.valueProperty().addListener(e->{
+			this.diametro = diametros.getValue(); 
+		});
+		
+		grid.add(new Label("Cor: "), 0, 0);
+		grid.add(colorPicker, 1, 0);
+		grid.add(new Label("Diâmetro dos Pontos: "),2, 0);
+		grid.add(diametroLinhas, 3, 0);
+				
+		return grid;
+	}
+	
 	private void preencherCanvasBasico(Ponto pt){
 		List<Ponto> pontos = new ArrayList<>();	 
 		
@@ -186,13 +228,11 @@ public class TelaPrincipal{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
-	    
 	}
 	
     private void desenharPontos( List<Ponto> pontos) {
         for (Ponto p : pontos) {
-            desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), 3, "", Color.BLACK);
+            desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), "");
         }
     }
 
@@ -204,9 +244,8 @@ public class TelaPrincipal{
      * @param y        posicao y
      * @param diametro diametro do ponto
      * @param nome     nome do ponto
-     * @param cor      cor do ponto
      */
-    public void desenharPonto(int x, int y, int diametro, String nome, Color cor) {
+    public void desenharPonto(int x, int y, String nome) {
         PontoGr p;
         // Cria um ponto
         p = new PontoGr(x, y, cor, nome, diametro);
