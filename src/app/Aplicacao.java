@@ -1,6 +1,6 @@
 package app;
 
-import gui.TelaCurvaDoDragao;
+import gui.TelaPrincipal;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -15,6 +15,7 @@ public class Aplicacao extends Application {
     @Override
     public void start(Stage palco) throws Exception {
         this.palco = palco;
-        new TelaCurvaDoDragao(palco);
+        new TelaPrincipal(palco);
     }
 }
+
