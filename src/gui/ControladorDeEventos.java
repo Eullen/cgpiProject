@@ -9,9 +9,11 @@ import calculadores.CalculadorGenerico;
 import calculadores.CirculoCalculador;
 import calculadores.CurvaDoDragaoCalculador;
 import calculadores.RetaCalculador;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.WritableImage;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +31,8 @@ public class ControladorDeEventos {
 	private Ponto pontoAtual;
     private Color cor;
     private int diametro;
+    private WritableImage backup;
+    private boolean fimElastico = true;
     
     
 	public ControladorDeEventos(Canvas canvas) {
@@ -51,25 +55,37 @@ public class ControladorDeEventos {
 	}
 
 	public void onCanvasMousePressed(MouseEvent event){
-		if (event.getButton() == MouseButton.PRIMARY && tipoDesenho != null) {
-        	if (tipoDesenho.equals(TipoDesenho.CURVA_DO_DRAGAO)) {
-        		if (iteracoesCurvaDragao <= 17) {
-        		preencherCanvasCurvaDoDragão();
-        		this.iteracoesCurvaDragao += 1;
-        		}else {
-        			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.", ButtonType.FINISH);
-        			alerta.show();
-        		}
-        	}else if (tipoDesenho.equals(TipoDesenho.PONTO)){
-        		desenharPonto((int) Math.floor(event.getX()),(int) Math.floor(event.getY()), "");
-        	}else{
-        		preencherCanvasPrimitivosBasicos(new Ponto(event.getX(),event.getY()));             		
-        	}
+		if (event.getButton() == MouseButton.PRIMARY && tipoDesenho != null) {       	
+        	Ponto pontoClicado = new Ponto(event.getX(),event.getY());
+			switch(tipoDesenho){
+        		case CURVA_DO_DRAGAO :
+        			desenharCurvaDoDragao();
+        			break;
+        		case PONTO:
+        			desenharPonto((int) Math.floor(event.getX()),(int) Math.floor(event.getY()), "");
+    				break;
+        		case RETA:
+        		case CIRCULO:
+        			onMousePressedPrimitivosBasicos(pontoClicado);
+        			break;
+        		case RETA_ELASTICA:
+        			onMousePressedPrimitivosElasticos(pontoClicado);
+        			break;
+        	}        	
     	}	
 	}
 	
+	private void desenharCurvaDoDragao(){
+		if (iteracoesCurvaDragao <= 17) {
+    		preencherCanvasCurvaDoDragão();
+    		this.iteracoesCurvaDragao += 1;
+		}else {
+			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.", ButtonType.FINISH);
+			alerta.show();
+		}
+	}
+	
 	public void limparCanvas() {
-		this.iteracoesCurvaDragao = 0;
 		this.canvas.getGraphicsContext2D().clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 	}
 	
@@ -89,42 +105,71 @@ public class ControladorDeEventos {
 		}
 	}
 	
-	private void preencherCanvasPrimitivosBasicos(Ponto pt){
-		List<Ponto> pontos = new ArrayList<>();	 
-
-		switch(tipoDesenho){
-			case RETA:
-				desenharReta(pt);
-	            break;
-			case CIRCULO:
-				desenharCirculo(pt);
-				break;
-			default:
-				throw new RuntimeException("Erro interno");
-		}	
+	private void onMousePressedPrimitivosBasicos(Ponto pt){
+		
+		if (pontoAtual == null){
+			pontoAtual = pt;		
+		}else{
+			switch(tipoDesenho){
+				case RETA:
+					desenharReta(pt);
+		            break;
+				case CIRCULO:
+					desenharCirculo(pt);
+					break;
+				default:
+					throw new RuntimeException("Erro interno");
+			}	
+			pontoAtual = null;
+		}
+	}
+	
+	private void onMousePressedPrimitivosElasticos(Ponto pt){
+		if (pontoAtual == null){
+			pontoAtual = pt;
+			//desenharPonto((int) Math.floor(pontoAtual.getx()),(int) Math.floor(pontoAtual.gety()), "Aqui");
+			SnapshotParameters params = new SnapshotParameters();
+	        params.setFill(Color.AZURE);
+			backup = canvas.snapshot(params, backup);
+			fimElastico = false;
+		}			
+	}
+	
+	public void onMouseDraggedPrimitivosElasticos(MouseEvent event){
+		if (event.getButton() == MouseButton.PRIMARY) {
+			if (fimElastico == false){
+				canvas.getGraphicsContext2D().drawImage(backup, 0, 0);
+				Ponto ptFinal = new Ponto (event.getX(), event.getY());
+				desenharReta(ptFinal);			
+				fimElastico = false;
+			}
+		}
+	}
+	
+	public void onMouseReleasedPrimitivosElasticos(MouseEvent event){
+		if (event.getButton() == MouseButton.PRIMARY) {
+			if (fimElastico == false) {
+				Ponto ptFinal = new Ponto (event.getX(), event.getY());
+				desenharReta(ptFinal);
+				fimElastico = true;
+				pontoAtual = null;
+			}
+		}
 	}
 	
 	private void desenharReta(Ponto pontoFinal){
-		if (pontoAtual == null){
-			pontoAtual = pontoFinal;
-		}else{
-			Reta reta = new Reta(pontoAtual, pontoFinal);
-            //pontos = RetaCalculador.obterPontos(reta);	
-			desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta));
-            pontoAtual = null;
-		}
+		Reta reta = new Reta(pontoAtual, pontoFinal);
+        //pontos = RetaCalculador.obterPontos(reta);	
+		desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta));
+        //pontoAtual = null;
 	}
 	
 	private void desenharCirculo(Ponto pontoFinal){
-		if (pontoAtual == null){
-			pontoAtual = pontoFinal;
-		}else{
-			Ponto pontoMedio = CalculadorGenerico.obterPontoMedio(pontoAtual, pontoFinal);
-			int raio = CirculoCalculador.obterRaio(pontoMedio, pontoFinal);
-			Circulo circulo = new Circulo(raio, pontoMedio);
-			desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo));
-			 pontoAtual = null;
-		}
+		Ponto pontoMedio = CalculadorGenerico.obterPontoMedio(pontoAtual, pontoFinal);
+		int raio = CirculoCalculador.obterRaio(pontoMedio, pontoFinal);
+		Circulo circulo = new Circulo(raio, pontoMedio);
+		desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo));
+		pontoAtual = null;
 	}
 	
     private void desenharPontos( List<Ponto> pontos) {

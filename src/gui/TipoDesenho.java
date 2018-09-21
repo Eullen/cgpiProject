@@ -11,6 +11,6 @@ public enum TipoDesenho {
 	RETA,
 	CIRCULO,
 	PONTO,
-	CURVA_DO_DRAGAO
-	
+	CURVA_DO_DRAGAO,
+	RETA_ELASTICA	
 }
