@@ -5,6 +5,7 @@ import java.util.List;
 import calculadores.CalculadorGenerico;
 import calculadores.CirculoCalculador;
 import calculadores.CurvaDoDragaoCalculador;
+import calculadores.PoligonoCalculador;
 import calculadores.RetaCalculador;
 import calculadores.RetanguloCalculador;
 import javafx.scene.SnapshotParameters;
@@ -17,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import primitivos.Circulo;
+import primitivos.Poligono;
 import primitivos.Ponto;
 import primitivos.PontoGr;
 import primitivos.Reta;
@@ -28,6 +30,7 @@ public class ControladorDeEventos {
 	private Canvas canvas;
 	private TipoDesenho tipoDesenho;
 	private Ponto pontoAtual;
+	private Poligono poligonoEmDesenho;
 	private Color cor;
 	private int diametro;
 	private WritableImage backup;
@@ -42,6 +45,7 @@ public class ControladorDeEventos {
 
 	public void setTipoDesenho(TipoDesenho tipoDesenho) {
 		this.tipoDesenho = tipoDesenho;
+		resetCanvas();
 	}
 
 	public void setCor(Color cor) {
@@ -53,30 +57,41 @@ public class ControladorDeEventos {
 	}
 
 	public void onCanvasMousePressed(MouseEvent event) {
-		if (event.getButton() == MouseButton.PRIMARY && tipoDesenho != null) {
-			Ponto pontoClicado = new Ponto(event.getX(), event.getY());
-			switch (tipoDesenho) {
-			case CURVA_DO_DRAGAO:
-				desenharCurvaDoDragao();
-				break;
-			case PONTO:
-				desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "");
-				break;
-			case RETA:
-			case CIRCULO:
-				onMousePressedPrimitivosBasicos(pontoClicado);
-				break;
-			case RETA_ELASTICA:
-			case CIRCULO_ELASTICO:
-			case RETANGULO_ELASTICO:
-			case POLIGONO_ELASTICO:
-			case RETA_POLIGONAL:
-				onMousePressedPrimitivosElasticos(pontoClicado);
-				break;
+		if (tipoDesenho != null){
+			if (event.getButton() == MouseButton.PRIMARY ) {
+				Ponto pontoClicado = new Ponto(event.getX(), event.getY());
+				switch (tipoDesenho) {
+				case CURVA_DO_DRAGAO:
+					desenharCurvaDoDragao();
+					break;
+				case PONTO:
+					desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "");
+					break;
+				case RETA:
+				case CIRCULO:
+					onMousePressedPrimitivosBasicos(pontoClicado);
+					break;
+				case RETA_ELASTICA:
+				case CIRCULO_ELASTICO:
+				case RETANGULO_ELASTICO:
+					onMousePressedPrimitivosElasticos(pontoClicado);
+				case POLIGONO_ELASTICO:
+				case RETA_POLIGONAL:
+					onMousePressedPoligonosElasticos(pontoClicado);
+					break;
+				}
+			}else if(event.getButton() == MouseButton.SECONDARY && (poligonoEmDesenho.getRetas().size() > 2)){
+				switch (tipoDesenho) {
+					case POLIGONO_ELASTICO:
+						fecharPoligono();
+					case RETA_POLIGONAL:
+						resetCanvas();
+						break;
+				}
 			}
 		}
 	}
-
+	
 	private void desenharCurvaDoDragao() {
 		if (iteracoesCurvaDragao <= 17) {
 			preencherCanvasCurvaDoDragão();
@@ -92,6 +107,19 @@ public class ControladorDeEventos {
 		this.canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
+	private void salvarCanvas(){
+		// Capturando estado do canvas para desenhar sobre ele
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.AZURE);
+		backup = canvas.snapshot(params, backup);
+	}
+	
+	public void resetCanvas(){
+		fimElastico = true;
+		poligonoEmDesenho = null;
+		pontoAtual = null;
+	}
+	
 	private void preencherCanvasCurvaDoDragão() {
 		limparCanvas();
 		Reta reta = new Reta(new Ponto(150, 400), new Ponto(600, 400));
@@ -130,14 +158,20 @@ public class ControladorDeEventos {
 	private void onMousePressedPrimitivosElasticos(Ponto pt) {
 		if (pontoAtual == null) {
 			pontoAtual = pt;
-			// Capturando estado do canvas para desenhar sobre ele
-			SnapshotParameters params = new SnapshotParameters();
-			params.setFill(Color.AZURE);
-			backup = canvas.snapshot(params, backup);
+			salvarCanvas();
 			fimElastico = false;
 		}
 	}
-
+	
+	private void onMousePressedPoligonosElasticos(Ponto pt){
+		if (pontoAtual == null) {
+			poligonoEmDesenho = new Poligono();
+			pontoAtual = pt;
+			fimElastico = false;
+		}
+		salvarCanvas();
+	}
+	
 	public void onMouseDraggedPrimitivosElasticos(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY) {
 			if (fimElastico == false) {
@@ -145,10 +179,18 @@ public class ControladorDeEventos {
 				canvas.getGraphicsContext2D().drawImage(backup, 0, 0);
 				// Desenha sobre o "estado" capturado quando mouse foi pressionado		
 				Ponto ptFinal = new Ponto(event.getX(), event.getY());
+				if (isPoligonoElastico()&& !poligonoEmDesenho.getRetas().isEmpty()){
+					//retirando retas desenhadas no dragged
+					poligonoEmDesenho.removerReta(poligonoEmDesenho.getRetas().size()-1);
+				}
 				desenharPrimitivoElastico(ptFinal);
 				fimElastico = false;
 			}
 		}
+	}
+	
+	private Boolean isPoligonoElastico(){
+		return tipoDesenho.equals(TipoDesenho.POLIGONO_ELASTICO) || (tipoDesenho.equals(TipoDesenho.RETA_POLIGONAL));
 	}
 	
 	private void desenharPrimitivoElastico(Ponto pt) {
@@ -160,22 +202,26 @@ public class ControladorDeEventos {
 				desenharCirculo(pt);
 				break;
 			case POLIGONO_ELASTICO:
+			case RETA_POLIGONAL:
+				desenharPoligono(pt);
 				break;
 			case RETANGULO_ELASTICO:
 				desenharRetangulo(pt);
 				break;
-			case RETA_POLIGONAL:
-				break;
 		}
 	}
-
+	
 	public void onMouseReleasedPrimitivosElasticos(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY) {
 			if (fimElastico == false) {
 				Ponto ptFinal = new Ponto(event.getX(), event.getY());
 				desenharPrimitivoElastico(ptFinal);
-				fimElastico = true;
-				pontoAtual = null;
+				fimElastico =  (isPoligonoElastico())
+								? false
+								: true;
+				pontoAtual = (isPoligonoElastico())
+								? ptFinal 
+								: null;
 			}
 		}
 	}
@@ -197,8 +243,10 @@ public class ControladorDeEventos {
 		desenharPontos(RetanguloCalculador.obterPontos(retangulo));
 	}
 	
-	private void desenharPoligono() {
-		// TODO: criar modelo e calculador		
+	private void desenharPoligono(Ponto pontoFinal) {
+		Reta reta = new Reta(pontoAtual, pontoFinal);
+		poligonoEmDesenho.addReta(reta);
+		desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho));
 	}
 	
 	private void desenharRetaPoligonal() {
@@ -218,10 +266,17 @@ public class ControladorDeEventos {
 		// Desenha o ponto
 		p.desenharPonto(canvas.getGraphicsContext2D());
 	}
+	
+	private void fecharPoligono(){
+			Reta retaFinal = new Reta(poligonoEmDesenho.getRetas().get(0).getA(), pontoAtual);
+			poligonoEmDesenho.addReta(retaFinal);
+			desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho));
+	}
 
 	public void getEventoBasicoMenuDesenho(TipoDesenho desenho) {
 		tipoDesenho = desenho;
 		iteracoesCurvaDragao = 0;
+		resetCanvas();
 	}
 
 }
