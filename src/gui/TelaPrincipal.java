@@ -114,7 +114,7 @@ public class TelaPrincipal {
 			controladorDeEventos.getEventoBasicoMenuDesenho(TipoDesenho.CIRCULO);
 		});
 		this.menuLimpar.setOnAction(e -> {
-			controladorDeEventos.limparCanvas();
+			controladorDeEventos.mostrarAvisoLimparCanvas();
 		});
 		this.menuCurvaDragao.setOnAction(e -> {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.CURVA_DO_DRAGAO);

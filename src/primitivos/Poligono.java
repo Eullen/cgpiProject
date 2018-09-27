@@ -3,14 +3,16 @@ package primitivos;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
 public class Poligono {
 	
-	List<Reta> retas;
-	
-	
+	private List<Reta> retas;
+	private Color cor;	
 
 	public Poligono() {
 		this.retas = new ArrayList<>();
+		this.cor = cor;
 	}
 
 	public List<Reta> getRetas() {

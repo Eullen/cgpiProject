@@ -1,28 +1,32 @@
 package primitivos;
 
+import javafx.scene.paint.Color;
+
 public class Retangulo {
-	Ponto DiagonalMin;
-	Ponto DiagonalMax;
+	private Ponto diagonalMin;
+	private Ponto diagonalMax;
+	private Color cor;
 	
-	public Retangulo(Ponto diagonalMin, Ponto diagonalMax) {
-		DiagonalMin = diagonalMin;
-		DiagonalMax = diagonalMax;
+	public Retangulo(Ponto diagonalMin, Ponto diagonalMax, Color cor) {
+		this.diagonalMin = diagonalMin;
+		this.diagonalMax = diagonalMax;
+		this.cor = cor;
 	}
 
 	public Ponto getDiagonalMin() {
-		return DiagonalMin;
+		return diagonalMin;
 	}
 	
 	public void setDiagonalMin(Ponto diagonalMin) {
-		DiagonalMin = diagonalMin;
+		this.diagonalMin = diagonalMin;
 	}
 	
 	public Ponto getDiagonalMax() {
-		return DiagonalMax;
+		return diagonalMax;
 	}
 	
 	public void setDiagonalMax(Ponto diagonalMax) {
-		DiagonalMax = diagonalMax;
+		this.diagonalMax = diagonalMax;
 	}
 	
 	

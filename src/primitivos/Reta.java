@@ -3,22 +3,36 @@
  */
 package primitivos;
 
+import javafx.scene.paint.Color;
+
 /**
  * @author ra00170556
  */
 
 public class Reta {
 
-	Ponto a;
-	Ponto b;
-	Double coeficienteAngular;
+	private Ponto a;
+	private Ponto b;
+	private Double coeficienteAngular;
+	private Color cor;
 
 	public Reta(Ponto a, Ponto b) {
 		super();
 		this.a = a;
 		this.b = b;
+		this.cor = null;
 		this.calcularCoeficienteAngular(a, b);
 	}
+	
+	public Reta(Ponto a, Ponto b, Color cor) {
+		super();
+		this.a = a;
+		this.b = b;
+		this.cor = cor;
+		this.calcularCoeficienteAngular(a, b);
+	}
+	
+	
 
 	private void calcularCoeficienteAngular(Ponto a, Ponto b) {
 		// TODO: Implementar : a.getx() - b.getx() != 0

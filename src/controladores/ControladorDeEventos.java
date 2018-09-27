@@ -1,12 +1,10 @@
 package controladores;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import calculadores.CalculadorGenerico;
 import calculadores.CirculoCalculador;
 import calculadores.CurvaDoDragaoCalculador;
@@ -69,6 +67,7 @@ public class ControladorDeEventos {
 		//TODO: mudar implementação para evitar ambiguidades e colocar a cor do objeto
 		objetosDesenhados = new HashMap<>();
 		List<TipoDesenho> listEnum = Arrays.asList(TipoDesenho.values());
+		
 		for (TipoDesenho tipoDesenho : listEnum) {
 			objetosDesenhados.put(tipoDesenho, new ArrayList<>());
 		}
@@ -86,7 +85,7 @@ public class ControladorDeEventos {
 						desenharCurvaDoDragao();
 						break;
 					case PONTO:
-						desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "");
+						desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "", cor);
 						break;
 					case RETA:
 					case CIRCULO:
@@ -116,15 +115,16 @@ public class ControladorDeEventos {
 	}
 
 	private void preencherCanvasCurvaDoDragão() {
-		limparCanvas();
-		Reta reta = new Reta(new Ponto(150, 400), new Ponto(600, 400));
+		
+		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		Reta reta = new Reta(new Ponto(150, 400), new Ponto(600, 400), cor);
 		CurvaDoDragaoCalculador calc = new CurvaDoDragaoCalculador(reta, this.iteracoesCurvaDragao);
 		List<Reta> retasCurvaDragao;
 
 		try {
 			retasCurvaDragao = calc.getRetasCurva();
 			for (Reta retaCalc : retasCurvaDragao) {
-				desenharPontos(RetaCalculador.obterPontos(retaCalc));
+				desenharPontos(RetaCalculador.obterPontos(retaCalc), cor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,7 +219,6 @@ public class ControladorDeEventos {
 		}
 	}
 	
-	
 	private void desenharCurvaDoDragao() {
 		if (iteracoesCurvaDragao <= 17) {
 			preencherCanvasCurvaDoDragão();
@@ -232,38 +231,38 @@ public class ControladorDeEventos {
 	}
 	
 	private void desenharReta(Ponto pontoFinal) {
-		Reta reta = new Reta(pontoAtual, pontoFinal);
-		desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta));
+		Reta reta = new Reta(pontoAtual, pontoFinal, cor);
+		desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta), cor);
 		salvarPrimitivoDesenhado(reta);
 	}
 
 	private void desenharCirculo(Ponto pontoFinal) {
 		Ponto pontoMedio = CalculadorGenerico.obterPontoMedio(pontoAtual, pontoFinal);
 		int raio = CirculoCalculador.obterRaio(pontoMedio, pontoFinal);
-		Circulo circulo = new Circulo(raio, pontoMedio);
-		desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo));
+		Circulo circulo = new Circulo(raio, pontoMedio, cor);
+		desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo), cor);
 		salvarPrimitivoDesenhado(circulo);
 	}
 	
 	private void desenharRetangulo(Ponto pontoFinal) {
-		Retangulo retangulo = new Retangulo(pontoAtual, pontoFinal);
-		desenharPontos(RetanguloCalculador.obterPontos(retangulo));
+		Retangulo retangulo = new Retangulo(pontoAtual, pontoFinal, cor);
+		desenharPontos(RetanguloCalculador.obterPontos(retangulo), cor);
 		salvarPrimitivoDesenhado(retangulo);
 	}
 	
 	private void desenharPoligono(Ponto pontoFinal) {
-		Reta reta = new Reta(pontoAtual, pontoFinal);
+		Reta reta = new Reta(pontoAtual, pontoFinal, cor);
 		poligonoEmDesenho.addReta(reta);
-		desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho));
+		desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho), cor);
 	}
 
-	private void desenharPontos(List<Ponto> pontos) {
+	private void desenharPontos(List<Ponto> pontos, Color cor) {
 		for (Ponto p : pontos) {
-			desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), "");
+			desenharPonto((int) Math.floor(p.getx()), (int) Math.floor(p.gety()), "", cor);
 		}
 	}
 
-	private void desenharPonto(int x, int y, String nome) {
+	private void desenharPonto(int x, int y, String nome, Color cor) {
 		PontoGr p;
 		// Cria um ponto
 		p = new PontoGr(x, y, cor, nome, diametro);
@@ -276,9 +275,9 @@ public class ControladorDeEventos {
 	}
 	
 	private void fecharPoligono(){
-			Reta retaFinal = new Reta(poligonoEmDesenho.getRetas().get(0).getA(), pontoAtual);
+			Reta retaFinal = new Reta(poligonoEmDesenho.getRetas().get(0).getA(), pontoAtual, cor);
 			poligonoEmDesenho.addReta(retaFinal);
-			desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho));
+			desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho), cor);
 	}
 
 	public void getEventoBasicoMenuDesenho(TipoDesenho desenho) {
@@ -287,16 +286,20 @@ public class ControladorDeEventos {
 		resetCanvas();
 	}
 	
-	public void limparCanvas() {
+	public void mostrarAvisoLimparCanvas(){
 		AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os dados desenhados. \n "
 				+ "Deseja continuar?", new AlertaCallback() {				
 					@Override
 					public void alertaCallbak() {
-						canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-						criarMapVazio();
-						resetCanvas();
+						limparCanvas();
 					}
 				});
+	}
+	
+	public void limparCanvas() {
+		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		criarMapVazio();
+		resetCanvas();
 	}
 
 	private void salvarCanvas(){
@@ -310,6 +313,7 @@ public class ControladorDeEventos {
 		fimElastico = true;
 		poligonoEmDesenho = null;
 		pontoAtual = null;
+		iteracoesCurvaDragao = 0;
 	}
 		
 	private Boolean isPoligonoElastico(){

@@ -3,6 +3,8 @@ package primitivos;
 import javafx.geometry.Point2D;
 
 public class Ponto extends Point2D {
+	
+	
 	Ponto() {
 		super(0, 0);
 	}
