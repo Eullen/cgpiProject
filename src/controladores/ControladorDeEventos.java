@@ -1,6 +1,11 @@
 package controladores;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import calculadores.CalculadorGenerico;
 import calculadores.CirculoCalculador;
@@ -23,6 +28,8 @@ import primitivos.Ponto;
 import primitivos.PontoGr;
 import primitivos.Reta;
 import primitivos.Retangulo;
+import utils.AlertaCallback;
+import utils.AlertaPersonalizado;
 
 public class ControladorDeEventos {
 
@@ -35,12 +42,14 @@ public class ControladorDeEventos {
 	private int diametro;
 	private WritableImage backup;
 	private boolean fimElastico = true;
+	private Map<TipoDesenho, List<Object>> objetosDesenhados;  
 
 	public ControladorDeEventos(Canvas canvas) {
 		super();
 		this.canvas = canvas;
 		this.iteracoesCurvaDragao = 0;
 		this.diametro = 3;
+		criarMapVazio();
 	}
 
 	public void setTipoDesenho(TipoDesenho tipoDesenho) {
@@ -55,71 +64,57 @@ public class ControladorDeEventos {
 	public void setDiametro(int diametro) {
 		this.diametro = diametro;
 	}
-
+	
+	private void criarMapVazio(){
+		//TODO: mudar implementação para evitar ambiguidades e colocar a cor do objeto
+		objetosDesenhados = new HashMap<>();
+		List<TipoDesenho> listEnum = Arrays.asList(TipoDesenho.values());
+		for (TipoDesenho tipoDesenho : listEnum) {
+			objetosDesenhados.put(tipoDesenho, new ArrayList<>());
+		}
+		objetosDesenhados.remove(TipoDesenho.CURVA_DO_DRAGAO);
+	}
+	
 	public void onCanvasMousePressed(MouseEvent event) {
 		if (tipoDesenho != null){
 			if (event.getButton() == MouseButton.PRIMARY ) {
+				// Captura clique com o botão primário do mouse
 				Ponto pontoClicado = new Ponto(event.getX(), event.getY());
+				//Definir qual desenho será feito
 				switch (tipoDesenho) {
-				case CURVA_DO_DRAGAO:
-					desenharCurvaDoDragao();
-					break;
-				case PONTO:
-					desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "");
-					break;
-				case RETA:
-				case CIRCULO:
-					onMousePressedPrimitivosBasicos(pontoClicado);
-					break;
-				case RETA_ELASTICA:
-				case CIRCULO_ELASTICO:
-				case RETANGULO_ELASTICO:
-					onMousePressedPrimitivosElasticos(pontoClicado);
-				case POLIGONO_ELASTICO:
-				case RETA_POLIGONAL:
-					onMousePressedPoligonosElasticos(pontoClicado);
-					break;
+					case CURVA_DO_DRAGAO:
+						desenharCurvaDoDragao();
+						break;
+					case PONTO:
+						desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "");
+						break;
+					case RETA:
+					case CIRCULO:
+						onMousePressedPrimitivosBasicos(pontoClicado);
+						break;
+					case RETA_ELASTICA:
+					case CIRCULO_ELASTICO:
+					case RETANGULO_ELASTICO:
+						onMousePressedPrimitivosElasticos(pontoClicado);
+					case POLIGONO_ELASTICO:
+					case RETA_POLIGONAL:
+						onMousePressedPoligonosElasticos(pontoClicado);
+						break;
 				}
-			}else if(event.getButton() == MouseButton.SECONDARY && (poligonoEmDesenho.getRetas().size() > 2)){
+			}else if(event.getButton() == MouseButton.SECONDARY && (poligonoEmDesenho != null) && (poligonoEmDesenho.getRetas().size() > 2)){
+				// Captura clique com o botão secundário do mouse quando usuario está desenhando poligonos
 				switch (tipoDesenho) {
 					case POLIGONO_ELASTICO:
 						fecharPoligono();
 					case RETA_POLIGONAL:
+						salvarPrimitivoDesenhado(poligonoEmDesenho);
 						resetCanvas();
 						break;
 				}
 			}
 		}
 	}
-	
-	private void desenharCurvaDoDragao() {
-		if (iteracoesCurvaDragao <= 17) {
-			preencherCanvasCurvaDoDragão();
-			this.iteracoesCurvaDragao += 1;
-		} else {
-			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.",
-					ButtonType.FINISH);
-			alerta.show();
-		}
-	}
 
-	public void limparCanvas() {
-		this.canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}
-
-	private void salvarCanvas(){
-		// Capturando estado do canvas para desenhar sobre ele
-		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.AZURE);
-		backup = canvas.snapshot(params, backup);
-	}
-	
-	public void resetCanvas(){
-		fimElastico = true;
-		poligonoEmDesenho = null;
-		pontoAtual = null;
-	}
-	
 	private void preencherCanvasCurvaDoDragão() {
 		limparCanvas();
 		Reta reta = new Reta(new Ponto(150, 400), new Ponto(600, 400));
@@ -189,10 +184,6 @@ public class ControladorDeEventos {
 		}
 	}
 	
-	private Boolean isPoligonoElastico(){
-		return tipoDesenho.equals(TipoDesenho.POLIGONO_ELASTICO) || (tipoDesenho.equals(TipoDesenho.RETA_POLIGONAL));
-	}
-	
 	private void desenharPrimitivoElastico(Ponto pt) {
 		switch(tipoDesenho) {
 			case RETA_ELASTICA:
@@ -216,19 +207,34 @@ public class ControladorDeEventos {
 			if (fimElastico == false) {
 				Ponto ptFinal = new Ponto(event.getX(), event.getY());
 				desenharPrimitivoElastico(ptFinal);
+				//Atualiza se não estiver desenhando poligono elastico 
 				fimElastico =  (isPoligonoElastico())
 								? false
 								: true;
+				//Se estiver desenhando poligono elastico, precisa usar o ultimo ponto para desenhar a proxima reta
 				pontoAtual = (isPoligonoElastico())
 								? ptFinal 
 								: null;
 			}
 		}
 	}
-
+	
+	
+	private void desenharCurvaDoDragao() {
+		if (iteracoesCurvaDragao <= 17) {
+			preencherCanvasCurvaDoDragão();
+			this.iteracoesCurvaDragao += 1;
+		} else {
+			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.",
+					ButtonType.FINISH);
+			alerta.show();
+		}
+	}
+	
 	private void desenharReta(Ponto pontoFinal) {
 		Reta reta = new Reta(pontoAtual, pontoFinal);
 		desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta));
+		salvarPrimitivoDesenhado(reta);
 	}
 
 	private void desenharCirculo(Ponto pontoFinal) {
@@ -236,21 +242,19 @@ public class ControladorDeEventos {
 		int raio = CirculoCalculador.obterRaio(pontoMedio, pontoFinal);
 		Circulo circulo = new Circulo(raio, pontoMedio);
 		desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo));
+		salvarPrimitivoDesenhado(circulo);
 	}
 	
 	private void desenharRetangulo(Ponto pontoFinal) {
 		Retangulo retangulo = new Retangulo(pontoAtual, pontoFinal);
 		desenharPontos(RetanguloCalculador.obterPontos(retangulo));
+		salvarPrimitivoDesenhado(retangulo);
 	}
 	
 	private void desenharPoligono(Ponto pontoFinal) {
 		Reta reta = new Reta(pontoAtual, pontoFinal);
 		poligonoEmDesenho.addReta(reta);
 		desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho));
-	}
-	
-	private void desenharRetaPoligonal() {
-		// TODO: criar modelo e calculador
 	}
 
 	private void desenharPontos(List<Ponto> pontos) {
@@ -267,6 +271,10 @@ public class ControladorDeEventos {
 		p.desenharPonto(canvas.getGraphicsContext2D());
 	}
 	
+	private void salvarPrimitivoDesenhado(Object primitivo){
+		objetosDesenhados.get(tipoDesenho).add(primitivo);
+	}
+	
 	private void fecharPoligono(){
 			Reta retaFinal = new Reta(poligonoEmDesenho.getRetas().get(0).getA(), pontoAtual);
 			poligonoEmDesenho.addReta(retaFinal);
@@ -278,5 +286,33 @@ public class ControladorDeEventos {
 		iteracoesCurvaDragao = 0;
 		resetCanvas();
 	}
+	
+	public void limparCanvas() {
+		AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os dados desenhados. \n "
+				+ "Deseja continuar?", new AlertaCallback() {				
+					@Override
+					public void alertaCallbak() {
+						canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+						criarMapVazio();
+						resetCanvas();
+					}
+				});
+	}
 
+	private void salvarCanvas(){
+		// Capturando estado do canvas para desenhar sobre ele
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.AZURE);
+		backup = canvas.snapshot(params, backup);
+	}
+	
+	public void resetCanvas(){
+		fimElastico = true;
+		poligonoEmDesenho = null;
+		pontoAtual = null;
+	}
+		
+	private Boolean isPoligonoElastico(){
+		return tipoDesenho.equals(TipoDesenho.POLIGONO_ELASTICO) || (tipoDesenho.equals(TipoDesenho.RETA_POLIGONAL));
+	}
 }

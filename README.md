@@ -20,4 +20,32 @@ João Marcelo Ferreira
 
 ## Tarefa 2
 
-Desenhar a curva do dragão usando os componentes desenvolvidos na tarefa 1
+Desenhar a curva do dragão usando os componentes desenvolvidos na tarefa 1.
+
+## Tarefa 3
+
+Descrição: nesta atividade, deverá ser implementado um desenhador de figuras 2D. Estas
+figuras são compostas pelos seguintes primitivos básicos:
+
+	• Reta
+	• Circulo
+	• Retângulo
+	• Polígono: conjunto de segmentos de retas. Fechado.
+	• “linha poligonal”: conjunto de segmentos de retas. Aberto.
+
+Para desenhar cada primitivo, deverá ser utilizado o “rubber-band” (elástico) para auxiliar
+o usuário no posicionamento destes elementos na figura
+
+## Tarefa 3.1
+
+Operações do desenhador 2D:
+	
+	• Seleção de um primitivo.
+	• Apagar um primitivo selecionado.
+	• Apagar todo o desenho.
+	• “Clipping” de um trecho retangular da figura. Neste caso, o usuário seleciona uma 
+	área retangular sobre o desenho que está desenhada e depois, uma nova janela 
+	deverá ser utilizada para mostrar apenas os elementos contidos nesta área.
+	• Salvar em xml (vide exemplo na página da disciplina)
+	• Ler um xml
+	
