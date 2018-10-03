@@ -10,7 +10,7 @@ import primitivos.Reta;
 
 public class RetaCalculador {
 
-	public static List<Ponto> obterPontos(Reta reta) {
+	public static List<Ponto> obterPontos(Reta reta){
 		double m = reta.getCoeficienteAngular();
 		double b = reta.getA().gety() - m * reta.getA().getx();
 		int x1 = (int) Math.floor(reta.getA().getx());
@@ -121,5 +121,31 @@ public class RetaCalculador {
 		}
 
 		return pontos;
+	}
+	
+	public static double calcularDistanciaPontoReta(Ponto pt, Reta reta) {
+
+		// Precisa da equação da reta
+		/*
+		 * y1 – y2 = a 
+		 * x2 – x1 = b
+		 * x1y2 – x2y1 = c 
+		 * A equação geral da reta: ax + by + c = 0 
+		*/
+		pt = new Ponto(3, -6);
+		double aMock = 4;
+		double a = reta.getA().gety() - reta.getB().gety();
+		double bMock = 6;
+		double b = reta.getB().getx() - reta.getA().getx();;
+		double cMock = 2;
+		double c = (reta.getA().getx()*reta.getB().gety() - (reta.getB().getx()*reta.getA().gety()));
+		
+		// Fórmula de cálculo da distância
+		// d = |ax0 + by0 + c| / sqrt(a2 + b2)
+		
+		double d = Math.abs((aMock*pt.getx())+bMock*pt.gety()+cMock) / Math.sqrt(Math.pow(aMock, 2)+Math.pow(bMock, 2));
+		System.out.println("Distancia :"+d);
+		
+		return d;
 	}
 }

@@ -1,5 +1,6 @@
 package gui;
 
+import calculadores.RetaCalculador;
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
 import javafx.geometry.Insets;
@@ -23,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.Ponto;
+import primitivos.Reta;
 
 public class TelaPrincipal {
 
@@ -32,6 +34,7 @@ public class TelaPrincipal {
 	private Menu desenhoPontoPonto;
 	private Menu desenhoElastico;
 	private Menu opcoes;
+	private Menu apagar;
 	private MenuItem menuLimpar;
 	private MenuItem menuPontos;
 	private MenuItem menuRetas;
@@ -42,6 +45,7 @@ public class TelaPrincipal {
 	private MenuItem menuRetanguloElastico;
 	private MenuItem menuPoligonoElastico;
 	private MenuItem menuRetaPoligonalElastica;
+	private MenuItem menuApagarPrimitivos;
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
 
@@ -77,9 +81,10 @@ public class TelaPrincipal {
     	menuRetanguloElastico = new MenuItem("Retângulos");
     	menuPoligonoElastico = new MenuItem("Polígonos");
     	menuRetaPoligonalElastica = new MenuItem("Reta Poligonal");
+    	menuApagarPrimitivos = new MenuItem("Apagar formas");
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
-    	opcoes.getItems().add(menuLimpar);
+    	opcoes.getItems().addAll(menuApagarPrimitivos,menuLimpar);
     	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,opcoes);
     	
     	//Criando footer
@@ -133,6 +138,10 @@ public class TelaPrincipal {
 		});
 		this.menuRetaPoligonalElastica.setOnAction(e -> {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.RETA_POLIGONAL);
+		});
+		this.menuApagarPrimitivos.setOnAction(e -> {
+			//TODO: Implementar
+			double d = RetaCalculador.calcularDistanciaPontoReta(new Ponto(3,-6), new Reta(new Ponto(1,1), new Ponto(4, 6)));
 		});
 
 		// canvas
