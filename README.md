@@ -1,9 +1,9 @@
 ## Alunos
 Eullen Silva 
 Arthur Carvalho
-Jo„o Marcelo Ferreira
+Jo√£o Marcelo Ferreira
 
-## EspecificaÁıes da Atividade 
+## Especifica√ß√µes da Atividade 
 
 ## Tarefa 1
 
@@ -13,39 +13,39 @@ Jo„o Marcelo Ferreira
      
         Utilizando dois pontos desenhar um segmento.
 
-- CÌrculo
+- C√≠rculo
 
-         Utilizando ponto do centro e segundo ponto para definir o raio, ent√£o desenhar o c√≠rculo.
+         Utilizando ponto do centro e segundo ponto para definir o raio, ent√É¬£o desenhar o c√É¬≠rculo.
 
 
 ## Tarefa 2
 
-Desenhar a curva do drag„o usando os componentes desenvolvidos na tarefa 1.
+Desenhar a curva do drag√£o usando os componentes desenvolvidos na tarefa 1.
 
 ## Tarefa 3
 
-DescriÁ„o: nesta atividade, dever· ser implementado um desenhador de figuras 2D. Estas
-figuras s„o compostas pelos seguintes primitivos b·sicos:
+Descri√ß√£o: nesta atividade, dever√° ser implementado um desenhador de figuras 2D. Estas
+figuras s√£o compostas pelos seguintes primitivos b√°sicos:
 
-	ï Reta
-	ï Circulo
-	ï Ret‚ngulo
-	ï PolÌgono: conjunto de segmentos de retas. Fechado.
-	ï ìlinha poligonalî: conjunto de segmentos de retas. Aberto.
+	‚Ä¢ Reta
+	‚Ä¢ Circulo
+	‚Ä¢ Ret√¢ngulo
+	‚Ä¢ Pol√≠gono: conjunto de segmentos de retas. Fechado.
+	‚Ä¢ ‚Äúlinha poligonal‚Äù: conjunto de segmentos de retas. Aberto.
+	‚Ä¢ Sele√ß√£o de um primitivo.
+	‚Ä¢ Apagar um primitivo selecionado.
+	‚Ä¢ Apagar todo o desenho.
 
-Para desenhar cada primitivo, dever· ser utilizado o ìrubber-bandî (el·stico) para auxiliar
-o usu·rio no posicionamento destes elementos na figura
+Para desenhar cada primitivo, dever√° ser utilizado o ‚Äúrubber-band‚Äù (el√°stico) para auxiliar
+o usu√°rio no posicionamento destes elementos na figura
 
 ## Tarefa 3.1
 
-OperaÁıes do desenhador 2D:
+Opera√ß√µes do desenhador 2D:
 	
-	ï SeleÁ„o de um primitivo.
-	ï Apagar um primitivo selecionado.
-	ï Apagar todo o desenho.
-	ï ìClippingî de um trecho retangular da figura. Neste caso, o usu·rio seleciona uma 
-	·rea retangular sobre o desenho que est· desenhada e depois, uma nova janela 
-	dever· ser utilizada para mostrar apenas os elementos contidos nesta ·rea.
-	ï Salvar em xml (vide exemplo na p·gina da disciplina)
-	ï Ler um xml
+	‚Ä¢ ‚ÄúClipping‚Äù de um trecho retangular da figura. Neste caso, o usu√°rio seleciona uma 
+	√°rea retangular sobre o desenho que est√° desenhada e depois, uma nova janela 
+	dever√° ser utilizada para mostrar apenas os elementos contidos nesta √°rea.
+	‚Ä¢ Salvar em xml (vide exemplo na p√°gina da disciplina)
+	‚Ä¢ Ler um xml
 	
