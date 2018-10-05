@@ -34,7 +34,6 @@ public class TelaPrincipal {
 	private Menu desenhoPontoPonto;
 	private Menu desenhoElastico;
 	private Menu opcoes;
-	private Menu apagar;
 	private MenuItem menuLimpar;
 	private MenuItem menuPontos;
 	private MenuItem menuRetas;
@@ -140,8 +139,7 @@ public class TelaPrincipal {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.RETA_POLIGONAL);
 		});
 		this.menuApagarPrimitivos.setOnAction(e -> {
-			//TODO: Implementar
-			double d = RetaCalculador.calcularDistanciaPontoReta(new Ponto(3,-6), new Reta(new Ponto(1,1), new Ponto(4, 6)));
+			controladorDeEventos.setTipoDesenho(TipoDesenho.APAGAR_DESENHO);
 		});
 
 		// canvas
@@ -158,6 +156,11 @@ public class TelaPrincipal {
 
 		canvas.setOnMouseReleased(ev -> {
 			controladorDeEventos.onMouseReleasedPrimitivosElasticos(ev);
+		});
+		canvas.setOnKeyPressed(ev -> {
+			if (ev.getText() == "DEL"){
+				controladorDeEventos.apagarPrimitivos();
+			};
 		});
 
 	}

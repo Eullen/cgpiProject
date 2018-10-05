@@ -41,6 +41,7 @@ public class ControladorDeEventos {
 	private WritableImage backup;
 	private boolean fimElastico = true;
 	private Map<TipoPrimitivo, List<Object>> objetosDesenhados;  
+	private Map<TipoPrimitivo, Integer> indicesObjetosParaApagar;
 
 	public ControladorDeEventos(Canvas canvas) {
 		super();
@@ -48,7 +49,7 @@ public class ControladorDeEventos {
 		this.iteracoesCurvaDragao = 0;
 		this.diametro = 3;
 		this.cor = Color.BLACK;
-		criarMapVazio();
+		inicilizarEstruturasManipulacaoDeDesenhos();
 	}
 
 	public void setTipoDesenho(TipoDesenho tipoDesenho) {
@@ -64,7 +65,7 @@ public class ControladorDeEventos {
 		this.diametro = diametro;
 	}
 	
-	private void criarMapVazio(){
+	private void inicilizarEstruturasManipulacaoDeDesenhos(){
 		//TODO: mudar implementação para evitar ambiguidades e colocar a cor do objeto
 		objetosDesenhados = new HashMap<>();
 		List<TipoPrimitivo> listEnum = Arrays.asList(TipoPrimitivo.values());
@@ -72,7 +73,9 @@ public class ControladorDeEventos {
 		for ( TipoPrimitivo tipoPrimitivo: listEnum) {
 			objetosDesenhados.put(tipoPrimitivo, new ArrayList<>());
 		}
+		indicesObjetosParaApagar = new HashMap<>();
 	}
+
 	
 	public void onCanvasMousePressed(MouseEvent event) {
 		if (tipoDesenho != null){
@@ -83,6 +86,9 @@ public class ControladorDeEventos {
 				switch (tipoDesenho) {
 					case CURVA_DO_DRAGAO:
 						desenharCurvaDoDragao();
+						break;
+					case APAGAR_DESENHO:
+						onCanvasMousePressedApagarPrimitivo(pontoClicado);
 						break;
 					case PONTO:
 						desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "", cor);
@@ -169,6 +175,32 @@ public class ControladorDeEventos {
 		salvarCanvas();
 	}
 	
+	
+	public void onCanvasMousePressedApagarPrimitivo(Ponto pontoClicado){
+		
+		// Iterando sobre objetos já desenhados
+		objetosDesenhados.forEach((tipoPrimitivo, desenhos)->{
+			
+			for(Object desenho : desenhos){
+				double distancia = 0;
+				// calcular distancia do ponto pro objeto
+				switch (tipoPrimitivo) {
+					case RETA:
+						distancia = RetaCalculador.calcularDistanciaPontoReta(pontoClicado, (Reta)desenho);
+						break;
+					case RETANGULO:
+						break;
+					default:
+						break;
+				}
+				//guarda objeto para remoção posterior
+				if (distancia < 5.00){
+					indicesObjetosParaApagar.put(tipoPrimitivo,desenhos.indexOf(desenho));
+				}
+			}
+		});
+	}
+		
 	public void onMouseDraggedPrimitivosElasticos(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY) {
 			if (fimElastico == false) {
@@ -184,6 +216,10 @@ public class ControladorDeEventos {
 				fimElastico = false;
 			}
 		}
+	}
+	
+	public void apagarPrimitivos(){
+		System.out.println("APAGAR");
 	}
 	
 	private void desenharPrimitivoElastico(Ponto pt) {
@@ -301,7 +337,7 @@ public class ControladorDeEventos {
 	
 	public void limparCanvas() {
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		criarMapVazio();
+		inicilizarEstruturasManipulacaoDeDesenhos();
 		resetCanvas();
 	}
 
