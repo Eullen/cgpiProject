@@ -16,6 +16,14 @@ public class Reta {
 	private Double coeficienteAngular;
 	private Color cor;
 
+	public Color getCor() {
+		return cor;
+	}
+
+	public void setCor(Color cor) {
+		this.cor = cor;
+	}
+
 	public Reta(Ponto a, Ponto b) {
 		super();
 		this.a = a;

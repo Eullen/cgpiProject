@@ -20,6 +20,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import jdk.nashorn.internal.runtime.ListAdapter;
 import primitivos.Circulo;
 import primitivos.Poligono;
 import primitivos.Ponto;
@@ -41,7 +42,7 @@ public class ControladorDeEventos {
 	private WritableImage backup;
 	private boolean fimElastico = true;
 	private Map<TipoPrimitivo, List<Object>> objetosDesenhados;  
-	private Map<TipoPrimitivo, Integer> indicesObjetosParaApagar;
+	private Map<TipoPrimitivo, List<Integer>> indicesObjetosParaApagar;
 
 	public ControladorDeEventos(Canvas canvas) {
 		super();
@@ -68,12 +69,13 @@ public class ControladorDeEventos {
 	private void inicilizarEstruturasManipulacaoDeDesenhos(){
 		//TODO: mudar implementação para evitar ambiguidades e colocar a cor do objeto
 		objetosDesenhados = new HashMap<>();
+		indicesObjetosParaApagar = new HashMap<>();
 		List<TipoPrimitivo> listEnum = Arrays.asList(TipoPrimitivo.values());
 		
 		for ( TipoPrimitivo tipoPrimitivo: listEnum) {
 			objetosDesenhados.put(tipoPrimitivo, new ArrayList<>());
+			indicesObjetosParaApagar.put(tipoPrimitivo, new ArrayList<>());
 		}
-		indicesObjetosParaApagar = new HashMap<>();
 	}
 
 	
@@ -87,8 +89,8 @@ public class ControladorDeEventos {
 					case CURVA_DO_DRAGAO:
 						desenharCurvaDoDragao();
 						break;
-					case APAGAR_DESENHO:
-						onCanvasMousePressedApagarPrimitivo(pontoClicado);
+					case SELECIONA_DESENHO:
+						onCanvasMousePressedSelecionarPrimitivo(pontoClicado);
 						break;
 					case PONTO:
 						desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()), "", cor);
@@ -168,15 +170,15 @@ public class ControladorDeEventos {
 	
 	private void onMousePressedPoligonosElasticos(Ponto pt){
 		if (pontoAtual == null) {
-			poligonoEmDesenho = new Poligono();
+			poligonoEmDesenho = new Poligono(cor);
 			pontoAtual = pt;
 			fimElastico = false;
 		}
 		salvarCanvas();
 	}
+		
 	
-	
-	public void onCanvasMousePressedApagarPrimitivo(Ponto pontoClicado){
+	public void onCanvasMousePressedSelecionarPrimitivo(Ponto pontoClicado){
 		
 		// Iterando sobre objetos já desenhados
 		objetosDesenhados.forEach((tipoPrimitivo, desenhos)->{
@@ -189,16 +191,26 @@ public class ControladorDeEventos {
 						distancia = RetaCalculador.calcularDistanciaPontoReta(pontoClicado, (Reta)desenho);
 						break;
 					case RETANGULO:
+						distancia = RetanguloCalculador.calcularDistanciaPontoRetasRetangulo(pontoClicado, (Retangulo)desenho);
 						break;
-					default:
+					case POLIGONO:
+					case LINHA_POLIGONAL:
+						distancia = PoligonoCalculador.calcularDistanciaPontoRetasPoligono(pontoClicado, (Poligono) desenho);
+						break;
+					case CIRCULO:
+						distancia = CirculoCalculador.calcularDistanciaPontoCirculo(pontoClicado, (Circulo) desenho);
 						break;
 				}
 				//guarda objeto para remoção posterior
-				if (distancia < 5.00){
-					indicesObjetosParaApagar.put(tipoPrimitivo,desenhos.indexOf(desenho));
+				if (distancia < 7.00){
+					//verifica se já existe na lista de remoção
+					if (!indicesObjetosParaApagar.get(tipoPrimitivo).contains(desenhos.indexOf(desenho))){
+						indicesObjetosParaApagar.get(tipoPrimitivo).add(desenhos.indexOf(desenho));
+					}
 				}
 			}
 		});
+		this.desenharObjetosArmazenados(Color.DARKRED);
 	}
 		
 	public void onMouseDraggedPrimitivosElasticos(MouseEvent event) {
@@ -217,11 +229,7 @@ public class ControladorDeEventos {
 			}
 		}
 	}
-	
-	public void apagarPrimitivos(){
-		System.out.println("APAGAR");
-	}
-	
+			
 	private void desenharPrimitivoElastico(Ponto pt) {
 		switch(tipoDesenho) {
 			case RETA_ELASTICA:
@@ -325,16 +333,6 @@ public class ControladorDeEventos {
 		resetCanvas();
 	}
 	
-	public void mostrarAvisoLimparCanvas(){
-		AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os dados desenhados. \n "
-				+ "Deseja continuar?", new AlertaCallback() {				
-					@Override
-					public void alertaCallbak() {
-						limparCanvas();
-					}
-				});
-	}
-	
 	public void limparCanvas() {
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		inicilizarEstruturasManipulacaoDeDesenhos();
@@ -344,7 +342,7 @@ public class ControladorDeEventos {
 	private void salvarCanvas(){
 		// Capturando estado do canvas para desenhar sobre ele
 		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.AZURE);
+		params.setFill(Color.WHITE);
 		backup = canvas.snapshot(params, backup);
 	}
 	
@@ -357,5 +355,77 @@ public class ControladorDeEventos {
 		
 	private Boolean isPoligonoElastico(){
 		return tipoDesenho.equals(TipoDesenho.POLIGONO_ELASTICO) || (tipoDesenho.equals(TipoDesenho.RETA_POLIGONAL));
+	}
+	
+	private void desenharObjetosArmazenados(Color novaCor){
+		// apaga canvas
+		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		//desenha todos os objetos
+		objetosDesenhados.forEach((tipoPrimitivo, objetos) -> {
+			for(Object desenho : objetos){
+				//verifica se objeto está selecionado
+				boolean selecionado = (this.indicesObjetosParaApagar.get(tipoPrimitivo).contains(objetos.indexOf(desenho)))
+						? true
+						: false;
+				Color cor;
+				switch (tipoPrimitivo) {
+					case RETA:
+						Reta reta = (Reta) desenho;
+						cor = (selecionado) ? novaCor : reta.getCor() ;
+						this.desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta), cor);
+						break;
+					case RETANGULO:
+						Retangulo retangulo = (Retangulo) desenho;
+						cor = (selecionado) ? novaCor : retangulo.getCor() ;
+						this.desenharPontos(RetanguloCalculador.obterPontos(retangulo), cor);
+						break;
+					case POLIGONO:
+					case LINHA_POLIGONAL:
+						Poligono poligono = (Poligono) desenho;
+						cor = (selecionado) ? novaCor : poligono.getCor() ;
+						this.desenharPontos(PoligonoCalculador.obterPontos(poligono), cor);
+						break;
+					case CIRCULO:
+						Circulo circulo = (Circulo) desenho;
+						cor = (selecionado) ? novaCor : circulo.getCor() ;
+						desenharPontos(CirculoCalculador.obterPontosAlgoritmoMidPoint(circulo), cor );
+						break;
+				}
+			}
+		});
+	}
+
+	public void desfazerSelecao() {
+		indicesObjetosParaApagar.forEach((tipoPrimitivo, indices)->{
+			indices.clear();
+		});
+		desenharObjetosArmazenados(Color.WHITE);
+	}
+	
+	public void apagarPrimitivos(){
+		
+		if (!indicesObjetosParaApagar.isEmpty()){
+			Map<TipoPrimitivo, List<Object>> objetosDesenhadosAtualizados = copiaDesenhos(objetosDesenhados); 
+			indicesObjetosParaApagar.forEach((tipoPrimitivo, listaIndices) -> {
+				for (int indice : listaIndices){
+					Object objetoParaRemover = this.objetosDesenhados.get(tipoPrimitivo).get(indice);
+					objetosDesenhadosAtualizados.get(tipoPrimitivo).remove(objetoParaRemover);
+				}				
+			});
+			objetosDesenhados = objetosDesenhadosAtualizados;
+		}
+		desfazerSelecao();
+	}
+	
+	private Map<TipoPrimitivo, List<Object>> copiaDesenhos(Map<TipoPrimitivo, List<Object>> objetosDesenhados){
+		Map<TipoPrimitivo, List<Object>> objetosDesenhadosAtualizados = new HashMap<>();
+		objetosDesenhados.forEach((tipo, lista)->{
+			List<Object> listaAuxiliar = new ArrayList<>();
+			for ( Object desenho : lista){
+				listaAuxiliar.add(desenho);
+			}
+			objetosDesenhadosAtualizados.put(tipo,listaAuxiliar);
+		});
+		return objetosDesenhadosAtualizados;
 	}
 }

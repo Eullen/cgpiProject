@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import primitivos.Circulo;
 import primitivos.Ponto;
 import primitivos.PontoGr;
+import primitivos.Reta;
 
 public class CirculoCalculador {
 
@@ -76,5 +77,12 @@ public class CirculoCalculador {
 		pontos.add(new Ponto(x0 - y, y0 - x));
 		pontos.add(new Ponto(x0 - y, y0 + x));
 		pontos.add(new Ponto(x0 - x, y0 + y));
+	}
+	
+	public static double calcularDistanciaPontoCirculo(Ponto pt, Circulo circulo){
+
+		double distanciaPontoCentroCirculo = CalculadorGenerico.obterDistanciaEntreDoisPontos(pt,circulo.getPontoOrigem());
+		
+		return Math.abs(distanciaPontoCentroCirculo - circulo.getRaio());
 	}
 }

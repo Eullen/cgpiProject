@@ -10,7 +10,7 @@ public class Retangulo {
 	public Retangulo(Ponto diagonalMin, Ponto diagonalMax, Color cor) {
 		this.diagonalMin = diagonalMin;
 		this.diagonalMax = diagonalMax;
-		this.cor = cor;
+		this.setCor(cor);
 	}
 
 	public Ponto getDiagonalMin() {
@@ -27,6 +27,14 @@ public class Retangulo {
 	
 	public void setDiagonalMax(Ponto diagonalMax) {
 		this.diagonalMax = diagonalMax;
+	}
+
+	public Color getCor() {
+		return cor;
+	}
+
+	public void setCor(Color cor) {
+		this.cor = cor;
 	}
 	
 	

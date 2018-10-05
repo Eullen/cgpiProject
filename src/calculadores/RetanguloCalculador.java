@@ -40,7 +40,7 @@ public class RetanguloCalculador {
 		
 	}
 	
-	private static double calcularDistanciaPontoRetasRetangulo(Ponto pt, Retangulo retangulo){
+	public static double calcularDistanciaPontoRetasRetangulo(Ponto pt, Retangulo retangulo){
 		
 		List<Reta> retas = obterRetas(retangulo);
 		double distancia = 100000;

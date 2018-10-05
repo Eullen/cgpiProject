@@ -25,6 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.Ponto;
 import primitivos.Reta;
+import utils.AlertaCallback;
+import utils.AlertaPersonalizado;
 
 public class TelaPrincipal {
 
@@ -45,6 +47,8 @@ public class TelaPrincipal {
 	private MenuItem menuPoligonoElastico;
 	private MenuItem menuRetaPoligonalElastica;
 	private MenuItem menuApagarPrimitivos;
+	private MenuItem menuSelecionarPrimitivos;
+	private MenuItem menuDesfazerSelecaoPrimitivos;
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
 
@@ -80,10 +84,12 @@ public class TelaPrincipal {
     	menuRetanguloElastico = new MenuItem("Retângulos");
     	menuPoligonoElastico = new MenuItem("Polígonos");
     	menuRetaPoligonalElastica = new MenuItem("Reta Poligonal");
-    	menuApagarPrimitivos = new MenuItem("Apagar formas");
+    	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
+    	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
+    	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Seleção de Formas");
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
-    	opcoes.getItems().addAll(menuApagarPrimitivos,menuLimpar);
+    	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
     	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,opcoes);
     	
     	//Criando footer
@@ -92,7 +98,7 @@ public class TelaPrincipal {
     	menus.getChildren().addAll(menu,grid);
     	        
     	// atributos do painel
-        pane.setBackground(new Background(new BackgroundFill(Color.AZURE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setCenter(canvas); // posiciona o componente de desenho
         pane.setTop(menus);
         
@@ -118,7 +124,13 @@ public class TelaPrincipal {
 			controladorDeEventos.getEventoBasicoMenuDesenho(TipoDesenho.CIRCULO);
 		});
 		this.menuLimpar.setOnAction(e -> {
-			controladorDeEventos.mostrarAvisoLimparCanvas();
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os dados desenhados. \n "
+					+ "Deseja continuar?", new AlertaCallback() {				
+						@Override
+						public void alertaCallbak() {
+							controladorDeEventos.limparCanvas();
+						}
+					});
 		});
 		this.menuCurvaDragao.setOnAction(e -> {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.CURVA_DO_DRAGAO);
@@ -138,8 +150,21 @@ public class TelaPrincipal {
 		this.menuRetaPoligonalElastica.setOnAction(e -> {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.RETA_POLIGONAL);
 		});
-		this.menuApagarPrimitivos.setOnAction(e -> {
-			controladorDeEventos.setTipoDesenho(TipoDesenho.APAGAR_DESENHO);
+		this.menuSelecionarPrimitivos.setOnAction(e -> {
+			controladorDeEventos.setTipoDesenho(TipoDesenho.SELECIONA_DESENHO);
+		});
+		this.menuDesfazerSelecaoPrimitivos.setOnAction(e -> {
+			controladorDeEventos.desfazerSelecao();
+		});
+		this.menuApagarPrimitivos.setOnAction(ev ->{
+			
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os desenhos selecionados. \n "
+					+ "Deseja continuar?", new AlertaCallback() {				
+						@Override
+						public void alertaCallbak() {
+							controladorDeEventos.apagarPrimitivos();
+						}
+					});
 		});
 
 		// canvas
@@ -156,11 +181,6 @@ public class TelaPrincipal {
 
 		canvas.setOnMouseReleased(ev -> {
 			controladorDeEventos.onMouseReleasedPrimitivosElasticos(ev);
-		});
-		canvas.setOnKeyPressed(ev -> {
-			if (ev.getText() == "DEL"){
-				controladorDeEventos.apagarPrimitivos();
-			};
 		});
 
 	}

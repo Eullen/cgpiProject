@@ -10,7 +10,7 @@ public class Poligono {
 	private List<Reta> retas;
 	private Color cor;	
 
-	public Poligono() {
+	public Poligono(Color cor) {
 		this.retas = new ArrayList<>();
 		this.cor = cor;
 	}
@@ -25,6 +25,14 @@ public class Poligono {
 	
 	public void removerReta(int indice){
 		this.retas.remove(indice);
+	}
+
+	public Color getCor() {
+		return cor;
+	}
+
+	public void setCor(Color cor) {
+		this.cor = cor;
 	}
 	
 }

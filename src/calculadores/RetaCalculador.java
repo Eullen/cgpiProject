@@ -140,8 +140,6 @@ public class RetaCalculador {
 		// d = |ax0 + by0 + c| / sqrt(a2 + b2)
 		
 		double distancia = Math.abs((a*pt.getx())+b*pt.gety()+c) / Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
-		System.out.println("Distancia :"+distancia);
-		
 		return distancia;
 	}
 }
