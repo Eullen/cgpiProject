@@ -194,14 +194,14 @@ public class TelaPrincipal {
 		// Color Picker
 		ColorPicker colorPicker = new ColorPicker(Color.BLACK);
 		colorPicker.setOnAction(e -> {
-			controladorDeEventos.setCor(colorPicker.getValue());
+			controladorDeEventos.getDesenhador().setCor(colorPicker.getValue());
 		});
 
 		Spinner<Integer> diametroLinhas = new Spinner<Integer>();
 		SpinnerValueFactory<Integer> diametros = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 3);
 		diametroLinhas.setValueFactory(diametros);
 		diametroLinhas.valueProperty().addListener(e -> {
-			controladorDeEventos.setDiametro(diametros.getValue());
+			controladorDeEventos.getDesenhador().setDiametro(diametros.getValue());
 		});
 
 		grid.add(new Label("Cor: "), 0, 0);

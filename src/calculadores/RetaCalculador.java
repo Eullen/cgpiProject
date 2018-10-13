@@ -139,7 +139,17 @@ public class RetaCalculador {
 		// Fórmula de cálculo da distância
 		// d = |ax0 + by0 + c| / sqrt(a2 + b2)
 		
-		double distancia = Math.abs((a*pt.getx())+b*pt.gety()+c) / Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
-		return distancia;
+		double distancia = Math.abs((a*pt.getx())+b*pt.gety()+c) / Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));	
+		return (validaDistanciaPontoSegmentorDeReta(pt, reta)) ? distancia : distancia+10;
+	}
+	
+	// Verifica se ponto pertence a reta mas não ao segmento desenhado
+	private static boolean validaDistanciaPontoSegmentorDeReta(Ponto pt, Reta reta) {
+		
+		double tamanhoReta = CalculadorGenerico.obterDistanciaEntreDoisPontos(reta.getA(), reta.getB());
+		double distanciaPontoA = CalculadorGenerico.obterDistanciaEntreDoisPontos(pt, reta.getA());
+		double distanciaPontoB = CalculadorGenerico.obterDistanciaEntreDoisPontos(pt, reta.getB());
+		boolean distanciaValida = (distanciaPontoA > tamanhoReta || distanciaPontoB > tamanhoReta ) ? false : true;		
+		return distanciaValida;
 	}
 }
