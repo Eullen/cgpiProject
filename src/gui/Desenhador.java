@@ -166,6 +166,7 @@ public class Desenhador {
 	public void desenharObjetosArmazenados(Color novaCor){
 		// apaga canvas
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		
 		//desenha todos os objetos
 		objetosDesenhados.forEach((tipoPrimitivo, objetos) -> {
 			for(Object desenho : objetos){
@@ -199,6 +200,7 @@ public class Desenhador {
 				}
 			}
 		});
+
 	}
 	
 	public void limparObjetosSelecionados() {
@@ -216,5 +218,3 @@ public class Desenhador {
 		return (poligonoEmDesenho != null && poligonoEmDesenho.getRetas().size() > 2);
 	}
 }
-
-

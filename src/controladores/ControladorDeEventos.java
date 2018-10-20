@@ -90,16 +90,17 @@ public class ControladorDeEventos {
 				// Captura clique com o botão secundário do mouse quando usuario está desenhando poligonos
 				switch (tipoDesenho) {
 					case POLIGONO_ELASTICO:
-						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.POLIGONO);
 						// TODO: Mudar isso aqui, inverter ordem
 						Ponto ptInicio = this.desenhador.getPoligonoEmDesenho().getRetas().get(0).getA();
 						this.desenhador.desenharPoligono(ptInicio, pontoAtual);
+						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.POLIGONO);
 						break;
 					case RETA_POLIGONAL:
 						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.LINHA_POLIGONAL);
 						break;
 				}
 				resetCanvas();
+				resetPoligonoEmDesenho();
 			}
 		}
 	}
@@ -145,6 +146,10 @@ public class ControladorDeEventos {
 	
 	public void onCanvasMousePressedSelecionarPrimitivo(Ponto pontoClicado){
 		
+		if(this.desenhador.getPoligonoEmDesenho() != null) {
+			this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.LINHA_POLIGONAL);
+		} 
+		
 		// Iterando sobre objetos já desenhados
 		this.desenhador.getObjetosDesenhados().forEach((tipoPrimitivo, desenhos)->{
 			
@@ -176,6 +181,8 @@ public class ControladorDeEventos {
 			}
 		});
 		this.desenhador.desenharObjetosArmazenados(Color.DARKRED);
+		resetCanvas();
+		resetPoligonoEmDesenho();
 	}
 		
 	public void onMouseDraggedPrimitivosElasticos(MouseEvent event) {
@@ -243,7 +250,6 @@ public class ControladorDeEventos {
 	
 	public void getEventoBasicoMenuDesenho(TipoDesenho desenho) {
 		tipoDesenho = desenho;
-		iteracoesCurvaDragao = 0;
 		resetCanvas();
 	}
 	
@@ -251,6 +257,7 @@ public class ControladorDeEventos {
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		this.desenhador.inicilizarEstruturasManipulacaoDeDesenhos();
 		resetCanvas();
+		resetPoligonoEmDesenho();
 	}
 
 	private void salvarCanvas(){
@@ -262,9 +269,12 @@ public class ControladorDeEventos {
 	
 	public void resetCanvas(){
 		fimElastico = true;
-		this.desenhador.setPoligonoEmDesenho(null);
 		pontoAtual = null;
 		iteracoesCurvaDragao = 0;
+	}
+	
+	public void resetPoligonoEmDesenho() {
+		this.desenhador.setPoligonoEmDesenho(null);
 	}
 		
 	private Boolean isPoligonoElastico(){
