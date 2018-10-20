@@ -1,12 +1,12 @@
 package gui;
 
-import calculadores.RetaCalculador;
+import java.io.File;
+
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -19,12 +19,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import primitivos.Ponto;
-import primitivos.Reta;
 import utils.AlertaCallback;
 import utils.AlertaPersonalizado;
 
@@ -36,6 +35,7 @@ public class TelaPrincipal {
 	private Menu desenhoPontoPonto;
 	private Menu desenhoElastico;
 	private Menu opcoes;
+	private Menu arquivo;
 	private MenuItem menuLimpar;
 	private MenuItem menuPontos;
 	private MenuItem menuRetas;
@@ -49,8 +49,11 @@ public class TelaPrincipal {
 	private MenuItem menuApagarPrimitivos;
 	private MenuItem menuSelecionarPrimitivos;
 	private MenuItem menuDesfazerSelecaoPrimitivos;
+	private MenuItem menuAbrirArquivo;
+	private MenuItem menuSalvarArquivo;
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
+	private FileChooser fileChooser;
 
 	public TelaPrincipal(Stage palco) {
 		this.palco = palco;
@@ -74,6 +77,7 @@ public class TelaPrincipal {
         desenhoPontoPonto = new Menu("Desenho Ponto a Ponto");
         desenhoElastico = new Menu("Desenho com Elásticos");
         opcoes = new Menu("Opções");
+        arquivo = new Menu("Arquivo");
         menuPontos = new MenuItem("Pontos");
         menuRetas = new MenuItem("Retas");
         menuCirculos = new MenuItem("Círculos");
@@ -87,10 +91,13 @@ public class TelaPrincipal {
     	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
     	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Seleção de Formas");
+    	menuAbrirArquivo = new MenuItem("Abrir XML");
+    	menuSalvarArquivo = new MenuItem("Salvar em XML");
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
     	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
-    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,opcoes);
+    	arquivo.getItems().addAll(menuAbrirArquivo, menuSalvarArquivo);
+    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,arquivo,opcoes);
     	
     	//Criando footer
     	GridPane grid = montarMenuOpcoesGraficas();
@@ -166,7 +173,26 @@ public class TelaPrincipal {
 						}
 					});
 		});
-
+		
+		this.menuAbrirArquivo.setOnAction(ev -> {
+			fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+			File file = fileChooser.showOpenDialog(this.palco);
+			if (file != null) {
+				//TODO: Chamar desserializador
+			}
+		});
+		
+		this.menuSalvarArquivo.setOnAction(ev -> {
+			
+			fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+			File file = fileChooser.showSaveDialog(this.palco);
+			if (file != null) {
+				// TODO: Chamar serializador
+			}
+		});
+		
 		// canvas
 		canvas.setOnMouseMoved(event -> {
 			palco.setTitle("(Posição do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
@@ -211,5 +237,5 @@ public class TelaPrincipal {
 
 		return grid;
 	}
-
+	
 }
