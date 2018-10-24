@@ -1,12 +1,14 @@
 package gui;
 
-import calculadores.RetaCalculador;
+import java.util.List;
+import java.util.Map;
+
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
+import controladores.TipoPrimitivo;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -19,15 +21,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.Ponto;
-import primitivos.Reta;
 import utils.AlertaCallback;
 import utils.AlertaPersonalizado;
+import utils.Figura;
+import utils.XMLParser;
 
+@SuppressWarnings("restriction")
 public class TelaPrincipal {
 
 	Ponto pontoSelecionado = null;
@@ -49,6 +52,7 @@ public class TelaPrincipal {
 	private MenuItem menuApagarPrimitivos;
 	private MenuItem menuSelecionarPrimitivos;
 	private MenuItem menuDesfazerSelecaoPrimitivos;
+	private MenuItem menuSalvarXML;
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
 
@@ -87,9 +91,11 @@ public class TelaPrincipal {
     	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
     	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Seleção de Formas");
+    	menuSalvarXML = new MenuItem("Salvar");
+
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
-    	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
+    	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar, menuSalvarXML);
     	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,opcoes);
     	
     	//Criando footer
@@ -166,6 +172,19 @@ public class TelaPrincipal {
 						}
 					});
 		});
+		this.menuSalvarXML.setOnAction(ev -> {
+			try {
+				
+				Figura figura = new Figura();
+				figura.setObjetosDesenhados(controladorDeEventos.obterDesenhador().getObjetosDesenhados());
+				XMLParser<Figura> parser = new XMLParser<Figura>("C:/Users/arthu/Documents/puc/xml.xml");
+				parser.saveFile(figura);
+				System.out.println("salvou");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 
 		// canvas
 		canvas.setOnMouseMoved(event -> {
@@ -186,6 +205,8 @@ public class TelaPrincipal {
 	}
 	
 	// Menu de cores e diametro das linhas
+
+	@SuppressWarnings("restriction")
 	private GridPane montarMenuOpcoesGraficas() {
 		GridPane grid = new GridPane();
 		grid.setPadding(new Insets(5));

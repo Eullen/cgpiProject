@@ -3,11 +3,16 @@ package primitivos;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.scene.paint.Color;
 
+@XmlRootElement
 public class Poligono {
-	
 	private List<Reta> retas;
+	@XmlAttribute
 	private Color cor;	
 
 	public Poligono(Color cor) {

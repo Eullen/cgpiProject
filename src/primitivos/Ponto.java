@@ -1,7 +1,11 @@
 package primitivos;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.geometry.Point2D;
 
+@XmlRootElement
 public class Ponto extends Point2D {
 	
 	
@@ -17,10 +21,12 @@ public class Ponto extends Point2D {
 		super(p.getx(), p.gety());
 	}
 
+	@XmlElement(name="x")
 	public double getx() {
 		return getX();
 	}
-
+	
+	@XmlElement(name="y")
 	public double gety() {
 		return getY();
 	}

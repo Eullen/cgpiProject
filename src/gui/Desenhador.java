@@ -22,6 +22,8 @@ import primitivos.PontoGr;
 import primitivos.Reta;
 import primitivos.Retangulo;
 
+
+@SuppressWarnings("restriction")
 public class Desenhador {
 
 	private Color cor;

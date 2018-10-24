@@ -2,17 +2,14 @@ package calculadores;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.scene.canvas.GraphicsContext;
 import primitivos.Circulo;
 import primitivos.Ponto;
-import primitivos.PontoGr;
-import primitivos.Reta;
 
+@SuppressWarnings("restriction")
 public class CirculoCalculador {
 
 	public static List<Ponto> obterPontos(Circulo circulo) {
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 		final int raio = circulo.getRaio();
 		final Ponto pontoOrigem = circulo.getPontoOrigem();
 
@@ -34,7 +31,7 @@ public class CirculoCalculador {
 	}
 
 	public static List<Ponto> obterPontosAlgoritmoMidPoint(Circulo circulo) {
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 
 		if (circulo.getRaio() != 0) {
 

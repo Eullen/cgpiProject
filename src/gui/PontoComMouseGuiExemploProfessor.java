@@ -1,5 +1,7 @@
 package gui;
 
+import static javafx.scene.paint.Color.BLUE;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import primitivos.PontoGr;
 
+@SuppressWarnings("restriction")
 public class PontoComMouseGuiExemploProfessor {
 	int indicePonto = 1;
 
@@ -51,7 +54,7 @@ public class PontoComMouseGuiExemploProfessor {
 				x = (int) event.getX();
 				y = (int) event.getY();
 				// desenha ponto na posicao clicada
-				desenharPonto(gc, x, y, 6, "P" + indicePonto, Color.BLUE);
+				desenharPonto(gc, x, y, 6, "P" + indicePonto, BLUE);
 				indicePonto++;
 			} else if (event.getButton() == MouseButton.SECONDARY) {
 				x = (int) event.getX();

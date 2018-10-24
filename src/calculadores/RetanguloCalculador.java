@@ -17,7 +17,7 @@ public class RetanguloCalculador {
 	
 	
 	private static List<Reta> obterRetas (Retangulo retangulo){
-		List<Reta> retas = new ArrayList<>();
+		List<Reta> retas = new ArrayList<Reta>();
 		//Criando retas que formam o retangulo
 		Ponto ptXminYmax = new Ponto(retangulo.getDiagonalMin().getx(), retangulo.getDiagonalMax().gety());
 		Ponto ptXmaxYmin = new Ponto(retangulo.getDiagonalMax().getx(), retangulo.getDiagonalMin().gety());
@@ -30,7 +30,7 @@ public class RetanguloCalculador {
 	
 	private static List<Ponto> obterPontosDasRetas(List<Reta> retas) {
 		
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 		
 		for (Reta reta : retas) {
 			pontos.addAll(RetaCalculador.obterPontos(reta));

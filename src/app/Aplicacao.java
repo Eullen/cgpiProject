@@ -4,6 +4,7 @@ import gui.TelaPrincipal;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+@SuppressWarnings("restriction")
 public class Aplicacao extends Application {
 
 

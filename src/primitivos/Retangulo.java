@@ -1,10 +1,18 @@
 package primitivos;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.scene.paint.Color;
 
+@XmlRootElement
 public class Retangulo {
+	@XmlElement
 	private Ponto diagonalMin;
+	@XmlElement
 	private Ponto diagonalMax;
+	@XmlAttribute
 	private Color cor;
 	
 	public Retangulo(Ponto diagonalMin, Ponto diagonalMax, Color cor) {

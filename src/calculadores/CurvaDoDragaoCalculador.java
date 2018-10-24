@@ -8,7 +8,7 @@ import primitivos.Reta;
 
 public class CurvaDoDragaoCalculador {
 
-	private List<Reta> retasCurva = new ArrayList<>();
+	private List<Reta> retasCurva = new ArrayList<Reta>();
 	private Reta retaInicial;
 	private int iteracoes;
 

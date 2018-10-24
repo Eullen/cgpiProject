@@ -3,17 +3,25 @@
  */
 package primitivos;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.scene.paint.Color;
 
 /**
  * @author ra00170556
  */
 
+@SuppressWarnings("restriction")
+@XmlRootElement
 public class Reta {
-
+	@XmlElement
 	private Ponto a;
+	@XmlElement
 	private Ponto b;
+	@XmlElement
 	private Double coeficienteAngular;
+	@XmlElement
 	private Color cor;
 
 	public Color getCor() {

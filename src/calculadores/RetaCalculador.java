@@ -19,7 +19,7 @@ public class RetaCalculador {
 		int y2 = (int) Math.floor(reta.getB().gety());
 		int deltaX = (x1 >= x2) ? Math.abs(x1 - x2) : Math.abs(x2 - x1);
 		int deltaY = (y1 >= y2) ? Math.abs(y1 - y2) : Math.abs(y2 - y1);
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 
 		if (x2 < x1) {
 			int aux = x1;
@@ -66,7 +66,7 @@ public class RetaCalculador {
 		int x2 = (int) Math.floor(reta.getB().getx());
 		int y1 = (int) Math.floor(reta.getA().gety());
 		int y2 = (int) Math.floor(reta.getB().gety());
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 
 		// Algoritmo Professor adaptado
 		int dx, dy, i, e;

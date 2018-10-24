@@ -1,5 +1,8 @@
 package primitivos;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -9,10 +12,15 @@ import javafx.scene.paint.Color;
  * @author Julio Arakaki
  * @version v1.0 Data: 2018/05/06
  */
+@XmlRootElement
 public class PontoGr extends Ponto {
+	@XmlAttribute
 	Color cor; // cor do ponto
+	@XmlAttribute(name="nome")
 	String nomeP; // nome do ponto
+	@XmlAttribute(name="cor_do_nome")
 	Color corNomeP; // cor do nome
+	@XmlAttribute
 	int diametro = 1; // diametro do ponto, default = 1
 
 	/**

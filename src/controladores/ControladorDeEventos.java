@@ -303,4 +303,8 @@ public class ControladorDeEventos {
 		});
 		return objetosDesenhadosAtualizados;
 	}
+	
+	public Desenhador obterDesenhador() {
+		return this.desenhador;
+	}
 }

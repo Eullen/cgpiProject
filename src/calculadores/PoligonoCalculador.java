@@ -12,7 +12,7 @@ public class PoligonoCalculador {
 	
 	public static List<Ponto> obterPontos(Poligono poligono) {
 		
-		List<Ponto> pontos = new ArrayList<>();
+		List<Ponto> pontos = new ArrayList<Ponto>();
 		
 		for (Reta reta : poligono.getRetas()) {
 			pontos.addAll(RetaCalculador.obterPontos(reta));
