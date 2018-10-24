@@ -1,6 +1,4 @@
 package gui;
-
-
 import java.util.List;
 import java.util.Map;
 import java.io.File;
@@ -27,11 +25,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import primitivos.Ponto;
+import primitivos.*;
 import utils.AlertaCallback;
 import utils.AlertaPersonalizado;
 import utils.Figura;
 import utils.XMLParser;
+
+import javax.xml.bind.JAXBException;
 
 @SuppressWarnings("restriction")
 public class TelaPrincipal {
@@ -83,22 +83,22 @@ public class TelaPrincipal {
         //Criando Menu
         menu = new MenuBar();
         desenhoPontoPonto = new Menu("Desenho Ponto a Ponto");
-        desenhoElastico = new Menu("Desenho com Elásticos");
-        opcoes = new Menu("Opções");
+        desenhoElastico = new Menu("Desenho com Elasticos");
+        opcoes = new Menu("Opcoes");
         arquivo = new Menu("Arquivo");
         menuPontos = new MenuItem("Pontos");
         menuRetas = new MenuItem("Retas");
-        menuCirculos = new MenuItem("Círculos");
+        menuCirculos = new MenuItem("Circulos");
         menuLimpar = new MenuItem("Limpar");
-    	menuCurvaDragao = new MenuItem("Curva do Dragão");
+    	menuCurvaDragao = new MenuItem("Curva do Dragao");
     	menuRetaElastica = new MenuItem("Retas");
     	menuCirculoElastico = new MenuItem("Circulos");
-    	menuRetanguloElastico = new MenuItem("Retângulos");
-    	menuPoligonoElastico = new MenuItem("Polígonos");
+    	menuRetanguloElastico = new MenuItem("Retangulos");
+    	menuPoligonoElastico = new MenuItem("Poligonos");
     	menuRetaPoligonalElastica = new MenuItem("Reta Poligonal");
     	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
-    	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Seleção de Formas");
+    	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Selecao de Formas");
 
     	menuAbrirArquivo = new MenuItem("Abrir XML");
     	menuSalvarArquivo = new MenuItem("Salvar em XML");
@@ -127,7 +127,7 @@ public class TelaPrincipal {
 		
 	}
 	
-	// Vinculação dos componentes do MENU aos eventos declarados no ControladorDeEventos de componentes gráficos.
+	// Vincula??o dos componentes do MENU aos eventos declarados no ControladorDeEventos de componentes gr?ficos.
 	private void atribuirEventosAosComponentesGraficos() {
 		// menu
 		this.menuRetas.setOnAction(e -> {
@@ -141,7 +141,7 @@ public class TelaPrincipal {
 			controladorDeEventos.getEventoBasicoMenuDesenho(TipoDesenho.CIRCULO);
 		});
 		this.menuLimpar.setOnAction(e -> {
-			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os dados desenhados. \n "
+			AlertaPersonalizado.criarAlertaComCallback("A execucao dessa operacao resulta na perda de todos os dados desenhados. \n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
@@ -175,7 +175,7 @@ public class TelaPrincipal {
 		});
 		this.menuApagarPrimitivos.setOnAction(ev ->{
 			
-			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operação resulta na perda de todos os desenhos selecionados. \n "
+			AlertaPersonalizado.criarAlertaComCallback("A execucao dessa operacao resulta na perda de todos os desenhos selecionados. \n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
@@ -190,7 +190,23 @@ public class TelaPrincipal {
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
 			File file = fileChooser.showOpenDialog(this.palco);
 			if (file != null) {
-				//TODO: Chamar desserializador
+				try {
+					XMLParser<Figura> parser = new XMLParser<Figura>(file);
+					Figura figura = parser.toObject(new Class[] {
+							Figura.class,
+							Retangulo.class,
+							Ponto.class,
+							Reta.class,
+							Circulo.class,
+							Poligono.class,
+							PontoGr.class
+					});
+					this.controladorDeEventos.getDesenhador().setObjetosDesenhados(
+							figura.getObjetosDesenhados()
+					);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -200,13 +216,28 @@ public class TelaPrincipal {
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
 			File file = fileChooser.showSaveDialog(this.palco);
 			if (file != null) {
-				// TODO: Chamar serializador
+				try {
+					XMLParser<Figura> parser = new XMLParser<Figura>(file);
+					Figura figura = new Figura();
+					figura.setObjetosDesenhados(this.controladorDeEventos.getDesenhador().getObjetosDesenhados());
+					parser.saveFile(figura, new Class[] {
+							Figura.class,
+							Retangulo.class,
+							Ponto.class,
+							Reta.class,
+							Circulo.class,
+							Poligono.class,
+							PontoGr.class
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
 		// canvas
 		canvas.setOnMouseMoved(event -> {
-			palco.setTitle("(Posição do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
+			palco.setTitle("(Posi??o do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
 		});
 		canvas.setOnMousePressed(event -> {
 			controladorDeEventos.onCanvasMousePressed(event);
@@ -245,7 +276,7 @@ public class TelaPrincipal {
 
 		grid.add(new Label("Cor: "), 0, 0);
 		grid.add(colorPicker, 1, 0);
-		grid.add(new Label("Diâmetro dos Pontos: "), 2, 0);
+		grid.add(new Label("Diametro dos Pontos: "), 2, 0);
 		grid.add(diametroLinhas, 3, 0);
 
 		return grid;

@@ -5,10 +5,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import javafx.geometry.Point2D;
 
-@XmlRootElement
+@XmlRootElement(name = "Ponto")
 public class Ponto extends Point2D {
-	
-	
+
 	Ponto() {
 		super(0, 0);
 	}

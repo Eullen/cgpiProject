@@ -60,9 +60,9 @@ public class ControladorDeEventos {
 	public void onCanvasMousePressed(MouseEvent event) {
 		if (tipoDesenho != null){
 			if (event.getButton() == MouseButton.PRIMARY ) {
-				// Captura clique com o botão primário do mouse
+				// Captura clique com o botï¿½o primï¿½rio do mouse
 				Ponto pontoClicado = new Ponto(event.getX(), event.getY());
-				//Definir qual desenho será feito
+				//Definir qual desenho serï¿½ feito
 				switch (tipoDesenho) {
 					case CURVA_DO_DRAGAO:
 						desenharCurvaDoDragao();
@@ -87,7 +87,7 @@ public class ControladorDeEventos {
 						break;
 				}
 			}else if(event.getButton() == MouseButton.SECONDARY && this.desenhador.isPoligonoElasticoEmDesenho()){
-				// Captura clique com o botão secundário do mouse quando usuario está desenhando poligonos
+				// Captura clique com o botï¿½o secundï¿½rio do mouse quando usuario estï¿½ desenhando poligonos
 				switch (tipoDesenho) {
 					case POLIGONO_ELASTICO:
 						// TODO: Mudar isso aqui, inverter ordem
@@ -150,7 +150,7 @@ public class ControladorDeEventos {
 			this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.LINHA_POLIGONAL);
 		} 
 		
-		// Iterando sobre objetos já desenhados
+		// Iterando sobre objetos jï¿½ desenhados
 		this.desenhador.getObjetosDesenhados().forEach((tipoPrimitivo, desenhos)->{
 			
 			for(Object desenho : desenhos){
@@ -171,9 +171,9 @@ public class ControladorDeEventos {
 						distancia = CirculoCalculador.calcularDistanciaPontoCirculo(pontoClicado, (Circulo) desenho);
 						break;
 				}
-				//guarda objeto para remoção posterior
+				//guarda objeto para remoï¿½ï¿½o posterior
 				if (distancia < 7.00){
-					//verifica se já existe na lista de remoção
+					//verifica se jï¿½ existe na lista de remoï¿½ï¿½o
 					if (!this.desenhador.getIndicesObjetosParaApagar().get(tipoPrimitivo).contains(desenhos.indexOf(desenho))){
 						this.desenhador.getIndicesObjetosParaApagar().get(tipoPrimitivo).add(desenhos.indexOf(desenho));
 					}
@@ -206,7 +206,7 @@ public class ControladorDeEventos {
 		if (event.getButton() == MouseButton.PRIMARY) {
 			if (fimElastico == false) {
 				Ponto ptFinal = new Ponto(event.getX(), event.getY());
-				//Atualiza se não estiver desenhando poligono elastico 
+				//Atualiza se nï¿½o estiver desenhando poligono elastico 
 				fimElastico =  (isPoligonoElastico())
 								? false
 								: true;
@@ -222,16 +222,16 @@ public class ControladorDeEventos {
 	
 	private void desenharCurvaDoDragao() {
 		if (iteracoesCurvaDragao <= 17) {
-			preencherCanvasCurvaDoDragão();
+			preencherCanvasCurvaDoDragao();
 			this.iteracoesCurvaDragao += 1;
 		} else {
-			Alert alerta = new Alert(AlertType.WARNING, "A aplicação atingiu o máximo de iterações possíveis.",
+			Alert alerta = new Alert(AlertType.WARNING, "A aplicaï¿½ï¿½o atingiu o mï¿½ximo de iteraï¿½ï¿½es possï¿½veis.",
 					ButtonType.FINISH);
 			alerta.show();
 		}
 	}
 	
-	private void preencherCanvasCurvaDoDragão() {
+	private void preencherCanvasCurvaDoDragao() {
 		
 		canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		Reta reta = new Reta(new Ponto(150, 400), new Ponto(600, 400), this.desenhador.getCor());

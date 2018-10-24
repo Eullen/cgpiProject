@@ -12,16 +12,11 @@ import javafx.scene.paint.Color;
  * @author Julio Arakaki
  * @version v1.0 Data: 2018/05/06
  */
-@XmlRootElement
 public class PontoGr extends Ponto {
-	@XmlAttribute
-	Color cor; // cor do ponto
-	@XmlAttribute(name="nome")
-	String nomeP; // nome do ponto
-	@XmlAttribute(name="cor_do_nome")
-	Color corNomeP; // cor do nome
-	@XmlAttribute
-	int diametro = 1; // diametro do ponto, default = 1
+	private Color cor; // cor do ponto
+	private String nomeP; // nome do ponto
+	private Color corNomeP; // cor do nome
+	private int diametro = 1; // diametro do ponto, default = 1
 
 	/**
 	 * Constroi um ponto na posicao x, y e com os atributos
