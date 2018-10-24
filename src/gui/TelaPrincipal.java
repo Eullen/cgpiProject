@@ -1,7 +1,9 @@
 package gui;
 
+
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
@@ -23,6 +25,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import primitivos.Ponto;
 import utils.AlertaCallback;
@@ -39,6 +42,7 @@ public class TelaPrincipal {
 	private Menu desenhoPontoPonto;
 	private Menu desenhoElastico;
 	private Menu opcoes;
+	private Menu arquivo;
 	private MenuItem menuLimpar;
 	private MenuItem menuPontos;
 	private MenuItem menuRetas;
@@ -52,9 +56,12 @@ public class TelaPrincipal {
 	private MenuItem menuApagarPrimitivos;
 	private MenuItem menuSelecionarPrimitivos;
 	private MenuItem menuDesfazerSelecaoPrimitivos;
-	private MenuItem menuSalvarXML;
+
+	private MenuItem menuAbrirArquivo;
+	private MenuItem menuSalvarArquivo;
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
+	private FileChooser fileChooser;
 
 	public TelaPrincipal(Stage palco) {
 		this.palco = palco;
@@ -78,6 +85,7 @@ public class TelaPrincipal {
         desenhoPontoPonto = new Menu("Desenho Ponto a Ponto");
         desenhoElastico = new Menu("Desenho com Elásticos");
         opcoes = new Menu("Opções");
+        arquivo = new Menu("Arquivo");
         menuPontos = new MenuItem("Pontos");
         menuRetas = new MenuItem("Retas");
         menuCirculos = new MenuItem("Círculos");
@@ -91,12 +99,15 @@ public class TelaPrincipal {
     	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
     	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Seleção de Formas");
-    	menuSalvarXML = new MenuItem("Salvar");
 
+    	menuAbrirArquivo = new MenuItem("Abrir XML");
+    	menuSalvarArquivo = new MenuItem("Salvar em XML");
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
-    	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar, menuSalvarXML);
-    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,opcoes);
+    	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
+    	arquivo.getItems().addAll(menuAbrirArquivo, menuSalvarArquivo);
+    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,arquivo,opcoes);
+
     	
     	//Criando footer
     	GridPane grid = montarMenuOpcoesGraficas();
@@ -172,20 +183,27 @@ public class TelaPrincipal {
 						}
 					});
 		});
-		this.menuSalvarXML.setOnAction(ev -> {
-			try {
-				
-				Figura figura = new Figura();
-				figura.setObjetosDesenhados(controladorDeEventos.obterDesenhador().getObjetosDesenhados());
-				XMLParser<Figura> parser = new XMLParser<Figura>("C:/Users/arthu/Documents/puc/xml.xml");
-				parser.saveFile(figura);
-				System.out.println("salvou");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+
+		
+		this.menuAbrirArquivo.setOnAction(ev -> {
+			fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+			File file = fileChooser.showOpenDialog(this.palco);
+			if (file != null) {
+				//TODO: Chamar desserializador
 			}
 		});
-
+		
+		this.menuSalvarArquivo.setOnAction(ev -> {
+			
+			fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+			File file = fileChooser.showSaveDialog(this.palco);
+			if (file != null) {
+				// TODO: Chamar serializador
+			}
+		});
+		
 		// canvas
 		canvas.setOnMouseMoved(event -> {
 			palco.setTitle("(Posição do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
@@ -232,5 +250,5 @@ public class TelaPrincipal {
 
 		return grid;
 	}
-
+	
 }
