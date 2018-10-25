@@ -18,7 +18,7 @@ public class Poligono {
 		this.cor = cor;
 	}
 
-	@XmlAnyElement(lax = true)
+	@XmlTransient
 	public List<Reta> getRetas() {
 		return retas;
 	}
@@ -46,7 +46,7 @@ public class Poligono {
 		this.cor = new Color(cor.r, cor.g, cor.b,1);
 	}
 
-	/*
+
 	@XmlAnyElement(lax = true)
 	public List<Ponto> getPontos() {
 		List<Ponto> pontos = new ArrayList<>();
@@ -56,5 +56,10 @@ public class Poligono {
 		});
 		return pontos;
 	}
-	*/
+
+	public void setPontos(List<Ponto> pontos) {
+		//tem que ajustar aqui
+		this.retas = new ArrayList<>();
+	}
+
 }

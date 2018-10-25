@@ -87,7 +87,8 @@ public class Reta implements Serializable {
 		this.calcularCoeficienteAngular(this.a, this.b);
 	}
 
-	@XmlElement(name = "CoeficienteAngular")
+	@XmlTransient
+	//@XmlElement(name = "CoeficienteAngular")
 	public Double getCoeficienteAngular() {
 		return coeficienteAngular;
 	}
