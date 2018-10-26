@@ -50,9 +50,11 @@ public class Poligono {
 	@XmlAnyElement(lax = true)
 	public List<Ponto> getPontos() {
 		List<Ponto> pontos = new ArrayList<>();
+		
+		//Unica reta que 
+		pontos.add(this.retas.get(0).getA());		
 		this.retas.forEach(reta -> {
 			pontos.add(reta.getA());
-			pontos.add(reta.getB());
 		});
 		return pontos;
 	}
@@ -60,6 +62,7 @@ public class Poligono {
 	public void setPontos(List<Ponto> pontos) {
 		//tem que ajustar aqui
 		this.retas = new ArrayList<>();
+		
 	}
 
 }

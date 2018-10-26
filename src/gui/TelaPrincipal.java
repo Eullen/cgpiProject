@@ -199,11 +199,14 @@ public class TelaPrincipal {
 							Reta.class,
 							Circulo.class,
 							Poligono.class,
+							LinhaPoligonal.class,
 							PontoGr.class
 					});
 					this.controladorDeEventos.getDesenhador().setObjetosDesenhados(
 							figura.getObjetosDesenhados()
 					);
+					//TODO: Chamar método que desenha os objetos
+					this.controladorDeEventos.getDesenhador().desenharObjetosArmazenados(null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -227,6 +230,7 @@ public class TelaPrincipal {
 							Reta.class,
 							Circulo.class,
 							Poligono.class,
+							LinhaPoligonal.class,
 							PontoGr.class
 					});
 				} catch (Exception e) {

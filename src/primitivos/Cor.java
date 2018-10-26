@@ -14,13 +14,13 @@ public class Cor {
 
     public Cor(){ }
 
-    public Cor(double red, double green, double blue){
-        this.r = r;
-        this.g = g;
-        this.b = b;
+    public Cor(double red, double green, double blue){    	
+    	this.r = (int)(red * 255 );
+        this.g = (int)(green * 255 );
+        this.b = (int)(blue * 255 );
     }
 
     public Color toColor(){
-        return new Color((double)r, (double)g, (double)b, 1);
+        return Color.rgb(r, g, b,1);
     }
 }

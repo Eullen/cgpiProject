@@ -21,6 +21,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import primitivos.Circulo;
+import primitivos.LinhaPoligonal;
 import primitivos.Poligono;
 import primitivos.Ponto;
 import primitivos.Reta;
@@ -92,7 +93,7 @@ public class ControladorDeEventos {
 					case POLIGONO_ELASTICO:
 						// TODO: Mudar isso aqui, inverter ordem
 						Ponto ptInicio = this.desenhador.getPoligonoEmDesenho().getRetas().get(0).getA();
-						this.desenhador.desenharPoligono(ptInicio, pontoAtual);
+						this.desenhador.desenharPoligono(pontoAtual, ptInicio);
 						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.POLIGONO);
 						break;
 					case RETA_POLIGONAL:
@@ -136,7 +137,10 @@ public class ControladorDeEventos {
 	
 	private void onMousePressedPoligonosElasticos(Ponto pt){
 		if (pontoAtual == null) {
-			this.desenhador.setPoligonoEmDesenho(new Poligono(desenhador.getCor()));
+			Poligono poligono = (tipoDesenho.equals(TipoDesenho.POLIGONO_ELASTICO)) 
+					? new Poligono(desenhador.getCor()) 
+					: new LinhaPoligonal(desenhador.getCor());
+			this.desenhador.setPoligonoEmDesenho(poligono);
 			pontoAtual = pt;
 			fimElastico = false;
 		}

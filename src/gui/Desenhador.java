@@ -202,7 +202,6 @@ public class Desenhador {
 				}
 			}
 		});
-
 	}
 	
 	public void limparObjetosSelecionados() {
