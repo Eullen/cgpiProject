@@ -55,7 +55,7 @@ public class Retangulo implements Serializable {
 		return new Cor(this.cor.getRed(), this.cor.getGreen(), this.cor.getBlue());
 	}
 	public void setCustomColor(Cor cor){
-		this.cor = new Color(cor.r, cor.g, cor.b,1);
+		this.cor = cor.toColor();
 	}
 	
 }

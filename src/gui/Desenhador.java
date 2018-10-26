@@ -157,7 +157,7 @@ public class Desenhador {
 		p.desenharPonto(canvas.getGraphicsContext2D());
 	}
 	
-	private void salvarPrimitivoDesenhado(TipoPrimitivo tipoPrimitivo,Object primitivo){
+	public void salvarPrimitivoDesenhado(TipoPrimitivo tipoPrimitivo,Object primitivo){
 		objetosDesenhados.get(tipoPrimitivo).add(primitivo);
 	}
 	

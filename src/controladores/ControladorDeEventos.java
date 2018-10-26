@@ -91,7 +91,6 @@ public class ControladorDeEventos {
 				// Captura clique com o bot�o secund�rio do mouse quando usuario est� desenhando poligonos
 				switch (tipoDesenho) {
 					case POLIGONO_ELASTICO:
-						// TODO: Mudar isso aqui, inverter ordem
 						Ponto ptInicio = this.desenhador.getPoligonoEmDesenho().getRetas().get(0).getA();
 						this.desenhador.desenharPoligono(pontoAtual, ptInicio);
 						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.POLIGONO);

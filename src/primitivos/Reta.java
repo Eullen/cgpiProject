@@ -25,8 +25,8 @@ public class Reta implements Serializable {
 	private Color cor;
 
 	public Reta(){
-		a = new Ponto();
-		b = new Ponto();
+//		a = new Ponto();
+//		b = new Ponto();
 	}
 
 	@XmlTransient
@@ -43,7 +43,7 @@ public class Reta implements Serializable {
 		return new Cor(this.cor.getRed(), this.cor.getGreen(), this.cor.getBlue());
 	}
 	public void setCustomColor(Cor cor){
-		this.cor = new Color(cor.r, cor.g, cor.b,1);
+		this.cor = cor.toColor();
 	}
 
 	public Reta(Ponto a, Ponto b) {
@@ -73,8 +73,10 @@ public class Reta implements Serializable {
 	}
 
 	public void setA(Ponto a) {
-		this.a = a;
-		this.calcularCoeficienteAngular(this.a, this.b);
+		if (this.a == null)
+			this.a = a;
+		else
+			this.b = a;
 	}
 
 	@XmlElement(name = "Ponto")
@@ -84,7 +86,6 @@ public class Reta implements Serializable {
 
 	public void setB(Ponto b) {
 		this.b = b;
-		this.calcularCoeficienteAngular(this.a, this.b);
 	}
 
 	@XmlTransient

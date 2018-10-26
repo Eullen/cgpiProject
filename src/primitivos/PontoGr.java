@@ -1,8 +1,5 @@
 package primitivos;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -111,7 +108,7 @@ public class PontoGr extends Ponto {
 	 *            diametro do ponto
 	 */
 	public PontoGr(PontoGr pg, Color cor, int diametro) {
-		super(pg.getX(), pg.getY());
+		super(pg.getx(), pg.gety());
 		setCor(cor);
 		setCorNomeP(Color.BLACK);
 		setNomeP("");
@@ -185,11 +182,11 @@ public class PontoGr extends Ponto {
 	public void desenharPonto(GraphicsContext g) {
 		// desenha ponto como um oval
 		g.setFill(getCor());
-		g.fillOval((int) getX() - (getDiametro() / 2), (int) getY() - (getDiametro() / 2), getDiametro(),
+		g.fillOval((int) getx() - (getDiametro() / 2), (int) gety() - (getDiametro() / 2), getDiametro(),
 				getDiametro());
 
 		// desenha nome do ponto
 		g.setFill(getCorStr());
-		g.strokeText(getStr(), (int) getX() + getDiametro(), (int) getY());
+		g.strokeText(getStr(), (int) getx() + getDiametro(), (int) gety());
 	}
 }

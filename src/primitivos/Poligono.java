@@ -8,10 +8,14 @@ import javafx.scene.paint.Color;
 
 @XmlRootElement(name = "Poligono")
 public class Poligono {
-	private List<Reta> retas;
+	protected List<Reta> retas;
 	private Color cor;
-
-	public Poligono() { }
+	private Reta reta; 
+	
+	public Poligono() { 
+		this.retas = new ArrayList<>();
+		this.reta  = new Reta();
+	}
 
 	public Poligono(Color cor) {
 		this.retas = new ArrayList<>();
@@ -43,26 +47,46 @@ public class Poligono {
 		return new Cor(this.cor.getRed(), this.cor.getGreen(), this.cor.getBlue());
 	}
 	public void setCustomColor(Cor cor){
-		this.cor = new Color(cor.r, cor.g, cor.b,1);
+		this.cor = cor.toColor();
 	}
-
 
 	@XmlAnyElement(lax = true)
-	public List<Ponto> getPontos() {
-		List<Ponto> pontos = new ArrayList<>();
-		
-		//Unica reta que 
-		pontos.add(this.retas.get(0).getA());		
-		this.retas.forEach(reta -> {
-			pontos.add(reta.getA());
-		});
-		return pontos;
+	public List<Object> getPontos() {
+		if (retas != null ){
+			List<Object> pontos = new ArrayList<>();
+				
+			this.retas.forEach(reta -> {
+				pontos.add(reta.getA());
+			});
+			return pontos;
+		}
+		return new ArrayList<>();
+	}
+	
+	@XmlElement(name="Ponto")
+	public Ponto getPonto(){
+		return null;
+	}
+	
+	public void setPonto(Ponto ponto) {
+		if (this.reta != null){
+			if (reta.getA() == null){
+				reta.setA(ponto);
+			}else{
+				if (reta.getB() == null){
+					// Tem somente o a da reta, mas vai construir nova
+					reta.setB(ponto);
+				}else{
+					// Tem reta, mas vai construir nova
+					reta.setA(reta.getB());
+					reta.setB(ponto);
+				}	
+				this.retas.add(new Reta(reta.getA(), reta.getB()));
+			}
+		}
 	}
 
-	public void setPontos(List<Ponto> pontos) {
-		//tem que ajustar aqui
-		this.retas = new ArrayList<>();
-		
+	public void adicionarUltimaReta() {
+		this.retas.add(new Reta(this.retas.get(this.retas.size()-1).getB(), this.retas.get(0).getA()));
 	}
-
 }

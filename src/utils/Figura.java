@@ -2,6 +2,7 @@ package utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import controladores.TipoPrimitivo;
+import primitivos.Poligono;
 
 @XmlRootElement(name = "Figura")
 public class Figura implements Serializable {
@@ -31,31 +33,35 @@ public class Figura implements Serializable {
 	@XmlTransient
 	public Map<TipoPrimitivo, List<Object>> getObjetosDesenhados(){
 		Map<TipoPrimitivo, List<Object>> objetos = new HashMap<>();
+		List<TipoPrimitivo> listEnum = Arrays.asList(TipoPrimitivo.values());
+		
+		for ( TipoPrimitivo tipoPrimitivo: listEnum) {
+			objetos.put(tipoPrimitivo, new ArrayList<>());
+		}
 
-		objetos.put(TipoPrimitivo.RETA, new ArrayList<Object>());
-		objetos.put(TipoPrimitivo.RETANGULO, new ArrayList<Object>());
-		objetos.put(TipoPrimitivo.CIRCULO, new ArrayList<Object>());
-		objetos.put(TipoPrimitivo.POLIGONO, new ArrayList<Object>());
-		objetos.put(TipoPrimitivo.LINHA_POLIGONAL, new ArrayList<Object>());
-
-		AtomicReference<List<Object>> listaAtual = null;
 		this.todosObjetosDesenhados.forEach((obj) -> {
-			switch (obj.getClass().getName()){
+			switch (obj.getClass().getSimpleName()){
 				case "Reta":
-					listaAtual.set(objetos.get(TipoPrimitivo.RETA));
+					//listaAtual.set(objetos.get(TipoPrimitivo.RETA));
+					objetos.get(TipoPrimitivo.RETA).add(obj);
 					break;
 				case "Poligono":
-					listaAtual.set(objetos.get(TipoPrimitivo.POLIGONO));
+					//TODO: Carregar retas do poligono
+					((Poligono) obj).adicionarUltimaReta();
+					objetos.get(TipoPrimitivo.POLIGONO).add(obj);
+					break;
+				case "LinhaPoligonal":
+					objetos.get(TipoPrimitivo.LINHA_POLIGONAL).add(obj);
 					break;
 				case "Retangulo":
-					listaAtual.set(objetos.get(TipoPrimitivo.RETANGULO));
+					objetos.get(TipoPrimitivo.RETANGULO).add(obj);
 					break;
 				case "Circulo":
-					listaAtual.set(objetos.get(TipoPrimitivo.CIRCULO));
+					objetos.get(TipoPrimitivo.CIRCULO).add(obj);
 					break;
 			}
-			if(listaAtual != null) listaAtual.get().add(obj);
 		});
+
 		return objetos;
 	}
 }

@@ -62,6 +62,10 @@ public class TelaPrincipal {
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
 	private FileChooser fileChooser;
+	
+	public static int LARGURA_CANVAS = 750;
+	public static int ALTURA_CANVAS = 750;
+					
 
 	public TelaPrincipal(Stage palco) {
 		this.palco = palco;
@@ -70,8 +74,8 @@ public class TelaPrincipal {
 
 	public void desenharTela(){
 			
-		palco.setWidth(750);
-		palco.setHeight(750);
+		palco.setWidth(LARGURA_CANVAS);
+		palco.setHeight(ALTURA_CANVAS);
 
 		//criando Canvas
         canvas = new Canvas(palco.getWidth(), palco.getHeight());
@@ -197,15 +201,16 @@ public class TelaPrincipal {
 							Retangulo.class,
 							Ponto.class,
 							Reta.class,
+							Ponto.class,
 							Circulo.class,
 							Poligono.class,
 							LinhaPoligonal.class,
 							PontoGr.class
 					});
+					//desenhando objetos obtidos
 					this.controladorDeEventos.getDesenhador().setObjetosDesenhados(
 							figura.getObjetosDesenhados()
-					);
-					//TODO: Chamar método que desenha os objetos
+					);					
 					this.controladorDeEventos.getDesenhador().desenharObjetosArmazenados(null);
 				} catch (Exception e) {
 					e.printStackTrace();
