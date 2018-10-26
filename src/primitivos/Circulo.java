@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import gui.TelaPrincipal;
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
@@ -22,13 +23,22 @@ public class Circulo implements Serializable {
 		this.setCor(cor);
 	}
 
-	@XmlElement(name = "Raio")
+	@XmlTransient
 	public int getRaio() {
 		return raio;
 	}
 
 	public void setRaio(int raio) {
 		this.raio = raio;
+	}
+	
+	@XmlElement(name = "Raio")
+	public double getRaioNormalizado() {
+		return (this.raio + 0.0) / TelaPrincipal.LARGURA_CANVAS;
+	}
+
+	public void setRaioNormalizado(double raioNormalizado) {
+		this.raio = (int) (raioNormalizado*TelaPrincipal.LARGURA_CANVAS);
 	}
 
 	@XmlElement(name = "Ponto")
