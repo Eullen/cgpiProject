@@ -72,11 +72,17 @@ public class Reta implements Serializable {
 		return a;
 	}
 
+	// Esse SET só deve ser utilizado pela api de leitura de xml
 	public void setA(Ponto a) {
 		if (this.a == null)
 			this.a = a;
 		else
 			this.b = a;
+	}
+	
+	@XmlTransient
+	public void setPontoA(Ponto a) {
+		this.a = a;
 	}
 
 	@XmlElement(name = "Ponto")

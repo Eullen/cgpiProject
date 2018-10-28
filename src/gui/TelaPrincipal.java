@@ -1,11 +1,8 @@
 package gui;
-import java.util.List;
-import java.util.Map;
 import java.io.File;
 
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
-import controladores.TipoPrimitivo;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -25,13 +22,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import primitivos.*;
+import primitivos.Circulo;
+import primitivos.LinhaPoligonal;
+import primitivos.Poligono;
+import primitivos.Ponto;
+import primitivos.PontoGr;
+import primitivos.Reta;
+import primitivos.Retangulo;
 import utils.AlertaCallback;
 import utils.AlertaPersonalizado;
 import utils.Figura;
 import utils.XMLParser;
-
-import javax.xml.bind.JAXBException;
 
 @SuppressWarnings("restriction")
 public class TelaPrincipal {
@@ -145,7 +146,7 @@ public class TelaPrincipal {
 			controladorDeEventos.getEventoBasicoMenuDesenho(TipoDesenho.CIRCULO);
 		});
 		this.menuLimpar.setOnAction(e -> {
-			AlertaPersonalizado.criarAlertaComCallback("A execucao dessa operacao resulta na perda de todos os dados desenhados. \n "
+			AlertaPersonalizado.criarAlertaComCallback("A execucao dessa operacao resulta na perda de todos os dados desenhados.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
@@ -179,7 +180,7 @@ public class TelaPrincipal {
 		});
 		this.menuApagarPrimitivos.setOnAction(ev ->{
 			
-			AlertaPersonalizado.criarAlertaComCallback("A execucao dessa operacao resulta na perda de todos os desenhos selecionados. \n "
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacao resulta na perda de todos os desenhos selecionados.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
@@ -190,36 +191,16 @@ public class TelaPrincipal {
 
 		
 		this.menuAbrirArquivo.setOnAction(ev -> {
-			fileChooser = new FileChooser();
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
-			File file = fileChooser.showOpenDialog(this.palco);
-			if (file != null) {
-				try {
-					XMLParser<Figura> parser = new XMLParser<Figura>(file);
-					Figura figura = parser.toObject(new Class[] {
-							Figura.class,
-							Retangulo.class,
-							Ponto.class,
-							Reta.class,
-							Ponto.class,
-							Circulo.class,
-							Poligono.class,
-							LinhaPoligonal.class,
-							PontoGr.class
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacao resulta na perda de todos os desenhos não salvos.\n "
+					+ "Deseja continuar?", new AlertaCallback() {				
+						@Override
+						public void alertaCallbak() {
+							abriXML();
+						}
 					});
-					//desenhando objetos obtidos
-					this.controladorDeEventos.getDesenhador().setObjetosDesenhados(
-							figura.getObjetosDesenhados()
-					);					
-					this.controladorDeEventos.getDesenhador().desenharObjetosArmazenados(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 		});
 		
 		this.menuSalvarArquivo.setOnAction(ev -> {
-			
 			fileChooser = new FileChooser();
 			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
 			File file = fileChooser.showSaveDialog(this.palco);
@@ -291,4 +272,32 @@ public class TelaPrincipal {
 		return grid;
 	}
 	
+	private void abriXML() {
+		fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+		File file = fileChooser.showOpenDialog(this.palco);
+		if (file != null) {
+			try {
+				XMLParser<Figura> parser = new XMLParser<Figura>(file);
+				Figura figura = parser.toObject(new Class[] {
+						Figura.class,
+						Retangulo.class,
+						Ponto.class,
+						Reta.class,
+						Ponto.class,
+						Circulo.class,
+						Poligono.class,
+						LinhaPoligonal.class,
+						PontoGr.class
+				});
+				//desenhando objetos obtidos
+				this.controladorDeEventos.getDesenhador().setObjetosDesenhados(
+						figura.getObjetosDesenhados()
+				);					
+				this.controladorDeEventos.getDesenhador().desenharObjetosArmazenados(null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

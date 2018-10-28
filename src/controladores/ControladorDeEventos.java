@@ -92,7 +92,7 @@ public class ControladorDeEventos {
 				switch (tipoDesenho) {
 					case POLIGONO_ELASTICO:
 						Ponto ptInicio = this.desenhador.getPoligonoEmDesenho().getRetas().get(0).getA();
-						this.desenhador.desenharPoligono(pontoAtual, ptInicio);
+						this.desenhador.desenharPoligono(pontoAtual, ptInicio, true);
 						this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.POLIGONO);
 						break;
 					case RETA_POLIGONAL:
@@ -195,10 +195,10 @@ public class ControladorDeEventos {
 				canvas.getGraphicsContext2D().drawImage(backup, 0, 0);
 				// Desenha sobre o "estado" capturado quando mouse foi pressionado		
 				Ponto ptFinal = new Ponto(event.getX(), event.getY());
-				if (isPoligonoElastico()&& !this.desenhador.getPoligonoEmDesenho().getRetas().isEmpty()){
-					//retirando retas desenhadas no dragged
-					this.desenhador.getPoligonoEmDesenho().removerReta(this.desenhador.getPoligonoEmDesenho().getRetas().size()-1);
-				}
+//				if (isPoligonoElastico()&& !this.desenhador.getPoligonoEmDesenho().getRetas().isEmpty()){
+//					//retirando retas desenhadas no dragged
+//					this.desenhador.getPoligonoEmDesenho().removerReta(this.desenhador.getPoligonoEmDesenho().getRetas().size()-1);
+//				}
 				this.desenhador.desenharPrimitivoElastico(pontoAtual,ptFinal, tipoDesenho, fimElastico);
 				fimElastico = false;
 			}
@@ -213,12 +213,11 @@ public class ControladorDeEventos {
 				fimElastico =  (isPoligonoElastico())
 								? false
 								: true;
-				this.desenhador.desenharPrimitivoElastico(pontoAtual,ptFinal,tipoDesenho, fimElastico);
+				this.desenhador.desenharPrimitivoElastico(pontoAtual,ptFinal,tipoDesenho, (fimElastico || isPoligonoElastico()) );
 				//Se estiver desenhando poligono elastico, precisa usar o ultimo ponto para desenhar a proxima reta
 				pontoAtual = (isPoligonoElastico())
 								? ptFinal 
 								: null;
-
 			}
 		}
 	}

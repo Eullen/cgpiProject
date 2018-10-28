@@ -3,6 +3,7 @@ package primitivos;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,28 +22,17 @@ public class LinhaPoligonal extends Poligono{
 		// TODO Auto-generated constructor stub
 	}
 	
-	/*
-	@XmlAnyElement(lax = true)
+
 	@Override
-	public List<Ponto> getPontos() {
-		List<Ponto> pontos = new ArrayList<>();
-		//pega ponto inicial
-		pontos.add(this.retas.get(0).getB());	
-		this.retas.forEach(reta -> {
-			pontos.add(reta.getB());
-		});
-		return pontos;
+	public List<Object> getPontos() {
+		if (retas != null ){
+			List<Object> pontos = new ArrayList<>();
+			pontos.add(retas.get(0).getA());	
+			this.retas.forEach(reta -> {
+				pontos.add(reta.getB());
+			});
+			return pontos;
+		}
+		return new ArrayList<>();
 	}
-	
-	@Override
-	public void setPontos(List<Ponto> pontos) {
-		//tem que ajustar aqui
-		this.retas = new ArrayList<>();
-		pontos.forEach(pt->{
-			if (pontos.indexOf(pt) != pontos.size()-1) 
-				retas.add(new Reta(pt, pontos.get(pontos.indexOf(pt)+1)));
-		});
-	}
-	*/
-	
 }

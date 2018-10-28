@@ -53,8 +53,7 @@ public class Poligono {
 	@XmlAnyElement(lax = true)
 	public List<Object> getPontos() {
 		if (retas != null ){
-			List<Object> pontos = new ArrayList<>();
-				
+			List<Object> pontos = new ArrayList<>();				
 			this.retas.forEach(reta -> {
 				pontos.add(reta.getA());
 			});
@@ -71,14 +70,14 @@ public class Poligono {
 	public void setPonto(Ponto ponto) {
 		if (this.reta != null){
 			if (reta.getA() == null){
-				reta.setA(ponto);
+				reta.setPontoA(ponto);
 			}else{
 				if (reta.getB() == null){
 					// Tem somente o a da reta, mas vai construir nova
 					reta.setB(ponto);
 				}else{
 					// Tem reta, mas vai construir nova
-					reta.setA(reta.getB());
+					reta.setPontoA(reta.getB());
 					reta.setB(ponto);
 				}	
 				this.retas.add(new Reta(reta.getA(), reta.getB()));

@@ -86,7 +86,7 @@ public class Desenhador {
 				break;
 			case POLIGONO_ELASTICO:
 			case RETA_POLIGONAL:
-				desenharPoligono(pontoInicial,pontoFinal);
+				desenharPoligono(pontoInicial,pontoFinal, salvar);
 				break;
 			case RETANGULO_ELASTICO:
 				desenharRetangulo(pontoInicial,pontoFinal, salvar);
@@ -133,9 +133,14 @@ public class Desenhador {
 		if (salvar) salvarPrimitivoDesenhado(TipoPrimitivo.RETANGULO, retangulo);
 	}
 	
-	public void desenharPoligono(Ponto pontoInicial, Ponto pontoFinal) {
+	public void desenharPoligono(Ponto pontoInicial, Ponto pontoFinal, boolean addReta) {
 		Reta reta = new Reta(pontoInicial, pontoFinal, cor);
-		poligonoEmDesenho.addReta(reta);
+		if (addReta) { 
+			poligonoEmDesenho.addReta(reta);
+		}else {
+			// Corrigindo desenho de retas no dragged
+			desenharReta(reta.getA(), reta.getB(), false);
+		}
 		desenharPontos(PoligonoCalculador.obterPontos(poligonoEmDesenho), cor);
 	}
 
@@ -216,6 +221,6 @@ public class Desenhador {
 	}
 	
 	public boolean isPoligonoElasticoEmDesenho() {
-		return (poligonoEmDesenho != null && poligonoEmDesenho.getRetas().size() > 2);
+		return (poligonoEmDesenho != null && poligonoEmDesenho.getRetas().size() >= 2);
 	}
 }

@@ -28,17 +28,22 @@ public class Retangulo implements Serializable {
 		return diagonalMin;
 	}
 
-	public void setDiagonalMin(Ponto diagonalMin) {
-		this.diagonalMin = diagonalMin;
-	}
+//	public void setDiagonalMin(Ponto diagonalMin) {
+//		this.diagonalMin = diagonalMin;
+//	}
 
 	@XmlElement(name = "Ponto")
 	public Ponto getDiagonalMax() {
 		return diagonalMax;
 	}
 
+	// Esse SET só deve ser utilizado pela api de leitura de xml
 	public void setDiagonalMax(Ponto diagonalMax) {
-		this.diagonalMax = diagonalMax;
+		if (this.diagonalMax == null)
+			this.diagonalMax = diagonalMax;
+		else
+			this.diagonalMin = diagonalMax;
+
 	}
 
 	@XmlTransient
