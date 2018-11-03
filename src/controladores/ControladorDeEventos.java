@@ -1,9 +1,19 @@
 package controladores;
 
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import com.sun.javafx.geom.transform.Affine3D;
+import com.sun.javafx.geom.transform.GeneralTransform3D;
+import com.sun.javafx.sg.prism.NGNode;
 
 import calculadores.CirculoCalculador;
 import calculadores.CurvaDoDragaoCalculador;
@@ -11,15 +21,24 @@ import calculadores.PoligonoCalculador;
 import calculadores.RetaCalculador;
 import calculadores.RetanguloCalculador;
 import gui.Desenhador;
+import gui.TelaClipping;
+import gui.TelaPrincipal;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Camera;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import primitivos.Circulo;
 import primitivos.LinhaPoligonal;
 import primitivos.Poligono;
@@ -70,7 +89,7 @@ public class ControladorDeEventos {
 						break;
 					case SELECIONA_DESENHO:
 						onCanvasMousePressedSelecionarPrimitivo(pontoClicado);
-						break;
+						break;					
 					case PONTO:
 						this.desenhador.desenharPonto((int) Math.floor(event.getX()), (int) Math.floor(event.getY()));
 						break;
@@ -81,6 +100,7 @@ public class ControladorDeEventos {
 					case RETA_ELASTICA:
 					case CIRCULO_ELASTICO:
 					case RETANGULO_ELASTICO:
+					case SELECIONAR_AREA_CLIPPING:
 						onMousePressedPrimitivosElasticos(pontoClicado);
 					case POLIGONO_ELASTICO:
 					case RETA_POLIGONAL:
@@ -145,7 +165,6 @@ public class ControladorDeEventos {
 		}
 		salvarCanvas();
 	}
-		
 	
 	public void onCanvasMousePressedSelecionarPrimitivo(Ponto pontoClicado){
 		
@@ -269,6 +288,16 @@ public class ControladorDeEventos {
 		backup = canvas.snapshot(params, backup);
 	}
 	
+	public void recortar(){
+		if (this.getDesenhador().getObjetosDesenhados().size() > 0) {
+			canvas.getGraphicsContext2D().drawImage(backup,0,0);
+			SnapshotParameters params = new SnapshotParameters();
+			params.setViewport(this.desenhador.getAreaRecorte());
+			WritableImage recorte = canvas.snapshot(params,null);
+			new TelaClipping(new Stage(), recorte).desenharTela();
+		}
+	}
+	
 	public void resetCanvas(){
 		fimElastico = true;
 		pontoAtual = null;
@@ -314,6 +343,13 @@ public class ControladorDeEventos {
 			objetosDesenhadosAtualizados.put(tipo,listaAuxiliar);
 		});
 		return objetosDesenhadosAtualizados;
+	}
+
+	public void desfazerSelecaoClipping() {
+		if(this.desenhador.getPoligonoEmDesenho() != null) {
+			this.desenhador.salvarPoligonoDesenhado(TipoPrimitivo.LINHA_POLIGONAL);
+		} 
+		this.desenhador.desenharObjetosArmazenados(null);
 	}
 
 }

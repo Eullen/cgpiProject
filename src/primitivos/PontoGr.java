@@ -1,6 +1,12 @@
 package primitivos;
 
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
+
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 
 /**
@@ -188,5 +194,6 @@ public class PontoGr extends Ponto {
 		// desenha nome do ponto
 		g.setFill(getCorStr());
 		g.strokeText(getStr(), (int) getx() + getDiametro(), (int) gety());
+		
 	}
 }

@@ -3,6 +3,7 @@ import java.io.File;
 
 import controladores.ControladorDeEventos;
 import controladores.TipoDesenho;
+import controladores.TipoPrimitivo;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -42,6 +43,7 @@ public class TelaPrincipal {
 	private MenuBar menu;
 	private Menu desenhoPontoPonto;
 	private Menu desenhoElastico;
+	private Menu clipping;
 	private Menu opcoes;
 	private Menu arquivo;
 	private MenuItem menuLimpar;
@@ -57,6 +59,9 @@ public class TelaPrincipal {
 	private MenuItem menuApagarPrimitivos;
 	private MenuItem menuSelecionarPrimitivos;
 	private MenuItem menuDesfazerSelecaoPrimitivos;
+	private MenuItem menuClipping;
+	private MenuItem menuSelecionarAreaClipping;
+	private MenuItem menuDesfazerSelecaoClipping;
 
 	private MenuItem menuAbrirArquivo;
 	private MenuItem menuSalvarArquivo;
@@ -64,8 +69,8 @@ public class TelaPrincipal {
 	private ControladorDeEventos controladorDeEventos;
 	private FileChooser fileChooser;
 	
-	public static int LARGURA_CANVAS = 750;
-	public static int ALTURA_CANVAS = 750;
+	public static int LARGURA_CANVAS = 1000;
+	public static int ALTURA_CANVAS = 700;
 					
 
 	public TelaPrincipal(Stage palco) {
@@ -77,6 +82,7 @@ public class TelaPrincipal {
 			
 		palco.setWidth(LARGURA_CANVAS);
 		palco.setHeight(ALTURA_CANVAS);
+		palco.setResizable(false);
 
 		//criando Canvas
         canvas = new Canvas(palco.getWidth(), palco.getHeight());
@@ -89,6 +95,7 @@ public class TelaPrincipal {
         menu = new MenuBar();
         desenhoPontoPonto = new Menu("Desenho Ponto a Ponto");
         desenhoElastico = new Menu("Desenho com Elasticos");
+        clipping = new Menu("Clipping");
         opcoes = new Menu("Opcoes");
         arquivo = new Menu("Arquivo");
         menuPontos = new MenuItem("Pontos");
@@ -104,26 +111,31 @@ public class TelaPrincipal {
     	menuApagarPrimitivos = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos = new MenuItem("Selecionar Formas Desenhadas");
     	menuDesfazerSelecaoPrimitivos = new MenuItem("Desfazer Selecao de Formas");
-
+    	menuSelecionarAreaClipping = new MenuItem("Selecionar ï¿½rea de Recorte");
+    	menuClipping = new MenuItem("Recortar");
+    	menuDesfazerSelecaoClipping = new MenuItem("Desfazer Seleï¿½ï¿½o de ï¿½rea");
     	menuAbrirArquivo = new MenuItem("Abrir XML");
     	menuSalvarArquivo = new MenuItem("Salvar em XML");
+    	
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
     	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
     	arquivo.getItems().addAll(menuAbrirArquivo, menuSalvarArquivo);
-    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,arquivo,opcoes);
+    	clipping.getItems().addAll(menuSelecionarAreaClipping,menuDesfazerSelecaoClipping,menuClipping);
+    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,arquivo,clipping,opcoes);
 
     	
     	//Criando footer
     	GridPane grid = montarMenuOpcoesGraficas();
     	VBox menus = new VBox();
     	menus.getChildren().addAll(menu,grid);
+    	menus.setMinHeight(60);
+    	menus.setMaxHeight(60);
     	        
     	// atributos do painel
         pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setCenter(canvas); // posiciona o componente de desenho
         pane.setTop(menus);
-        
     	atribuirEventosAosComponentesGraficos();
         // cria e insere cena
         Scene scene = new Scene(pane);
@@ -180,7 +192,7 @@ public class TelaPrincipal {
 		});
 		this.menuApagarPrimitivos.setOnAction(ev ->{
 			
-			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacao resulta na perda de todos os desenhos selecionados.\n "
+			AlertaPersonalizado.criarAlertaComCallback("A execuÃ§Ã£o dessa operacao resulta na perda de todos os desenhos selecionados.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
@@ -189,9 +201,20 @@ public class TelaPrincipal {
 					});
 		});
 
+		this.menuSelecionarAreaClipping.setOnAction(ev -> {
+			this.controladorDeEventos.setTipoDesenho(TipoDesenho.SELECIONAR_AREA_CLIPPING);
+		});
+		
+		this.menuDesfazerSelecaoClipping.setOnAction(ev -> {
+			this.controladorDeEventos.desfazerSelecaoClipping();
+		});
+		
+		this.menuClipping.setOnAction(ev -> {
+			this.controladorDeEventos.recortar();
+		});
 		
 		this.menuAbrirArquivo.setOnAction(ev -> {
-			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacao resulta na perda de todos os desenhos não salvos.\n "
+			AlertaPersonalizado.criarAlertaComCallback("A execuï¿½ï¿½o dessa operacao resulta na perda de todos os desenhos nï¿½o salvos.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {

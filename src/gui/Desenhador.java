@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.sun.jmx.mbeanserver.Repository.RegistrationContext;
 
 import calculadores.CalculadorGenerico;
 import calculadores.CirculoCalculador;
@@ -13,6 +16,7 @@ import calculadores.RetaCalculador;
 import calculadores.RetanguloCalculador;
 import controladores.TipoDesenho;
 import controladores.TipoPrimitivo;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import primitivos.Circulo;
@@ -32,6 +36,7 @@ public class Desenhador {
 	private Poligono poligonoEmDesenho;
 	private Map<TipoPrimitivo, List<Object>> objetosDesenhados;  
 	private Map<TipoPrimitivo, List<Integer>> indicesObjetosParaApagar;
+	private Rectangle2D areaRecorte;
 	
 	public Desenhador(Canvas canvas) {
 		this.diametro = 3;
@@ -64,6 +69,33 @@ public class Desenhador {
 		this.poligonoEmDesenho = poligonoEmDesenho;
 	}
 
+	public Rectangle2D getAreaRecorte() {
+		return areaRecorte;
+	}
+
+	public void setAreaRecorte(Rectangle2D areaRecorte) {
+		this.areaRecorte = areaRecorte;
+	}
+	
+	public Color getCor() {
+		return cor;
+	}
+
+
+	public void setCor(Color cor) {
+		this.cor = cor;
+	}
+
+
+	public int getDiametro() {
+		return diametro;
+	}
+
+
+	public void setDiametro(int diametro) {
+		this.diametro = diametro;
+	}
+
 
 	public void inicilizarEstruturasManipulacaoDeDesenhos(){
 		objetosDesenhados = new HashMap<>();
@@ -91,28 +123,11 @@ public class Desenhador {
 			case RETANGULO_ELASTICO:
 				desenharRetangulo(pontoInicial,pontoFinal, salvar);
 				break;
+			case SELECIONAR_AREA_CLIPPING:
+				desenharAreaSelecao(pontoInicial, pontoFinal, salvar);
 		}
 	}
 	
-	public Color getCor() {
-		return cor;
-	}
-
-
-	public void setCor(Color cor) {
-		this.cor = cor;
-	}
-
-
-	public int getDiametro() {
-		return diametro;
-	}
-
-
-	public void setDiametro(int diametro) {
-		this.diametro = diametro;
-	}
-
 	public void desenharReta(Ponto pontoInicial, Ponto pontoFinal, boolean salvar) {
 		Reta reta = new Reta(pontoInicial, pontoFinal, cor);
 		desenharPontos(RetaCalculador.obterPontosAlgoritmoMidPoint(reta), cor);
@@ -131,6 +146,18 @@ public class Desenhador {
 		Retangulo retangulo = new Retangulo(pontoInicial, pontoFinal, cor);
 		desenharPontos(RetanguloCalculador.obterPontos(retangulo), cor);
 		if (salvar) salvarPrimitivoDesenhado(TipoPrimitivo.RETANGULO, retangulo);
+	}
+	
+	public void desenharAreaSelecao(Ponto pontoInicial, Ponto pontoFinal, boolean salvarAreaRecorte) {
+		Retangulo retangulo = new Retangulo(pontoInicial, pontoFinal, cor);
+		List<Ponto> pontos = RetanguloCalculador.obterPontos(retangulo);
+		List<Ponto> pontosFiltrados = pontos.stream().filter(pt -> pontos.indexOf(pt)%10 == 0).collect(Collectors.toList());
+		desenharPontos(pontosFiltrados, cor);
+		if (salvarAreaRecorte) {
+			double largura = retangulo.getDiagonalMax().getx() - retangulo.getDiagonalMin().getx();
+			double altura = retangulo.getDiagonalMax().gety() - retangulo.getDiagonalMin().gety();
+			this.setAreaRecorte(new Rectangle2D(retangulo.getDiagonalMin().getx(), retangulo.getDiagonalMin().gety()+60, largura, altura));
+		}
 	}
 	
 	public void desenharPoligono(Ponto pontoInicial, Ponto pontoFinal, boolean addReta) {
@@ -177,7 +204,7 @@ public class Desenhador {
 		//desenha todos os objetos
 		objetosDesenhados.forEach((tipoPrimitivo, objetos) -> {
 			for(Object desenho : objetos){
-				//verifica se objeto está selecionado
+				//verifica se objeto estï¿½ selecionado
 				boolean selecionado = (this.indicesObjetosParaApagar.get(tipoPrimitivo).contains(objetos.indexOf(desenho)))
 						? true
 						: false;
@@ -223,4 +250,5 @@ public class Desenhador {
 	public boolean isPoligonoElasticoEmDesenho() {
 		return (poligonoEmDesenho != null && poligonoEmDesenho.getRetas().size() >= 2);
 	}
+
 }
