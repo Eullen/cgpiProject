@@ -1,5 +1,5 @@
 package transformadoresGeometricos;
 
 public enum TipoTransformacao {
-	ROTACAO, TRANSLACAO, ESCALA
+	SELECAO_PONTO, SELECAO_FIGURA, ROTACAO, TRANSLACAO, ESCALA
 }

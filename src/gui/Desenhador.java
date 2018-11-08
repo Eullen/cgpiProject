@@ -35,7 +35,7 @@ public class Desenhador {
 	private Canvas canvas;
 	private Poligono poligonoEmDesenho;
 	private Map<TipoPrimitivo, List<Object>> objetosDesenhados;  
-	private Map<TipoPrimitivo, List<Integer>> indicesObjetosParaApagar;
+	private Map<TipoPrimitivo, List<Integer>> indicesSelecionados;
 	private Rectangle2D areaRecorte;
 	
 	public Desenhador(Canvas canvas) {
@@ -53,12 +53,12 @@ public class Desenhador {
 		this.objetosDesenhados = objetosDesenhados;
 	}
 
-	public Map<TipoPrimitivo, List<Integer>> getIndicesObjetosParaApagar() {
-		return indicesObjetosParaApagar;
+	public Map<TipoPrimitivo, List<Integer>> getIndicesObjetosSelecionados() {
+		return indicesSelecionados;
 	}
 
-	public void setIndicesObjetosParaApagar(Map<TipoPrimitivo, List<Integer>> indicesObjetosParaApagar) {
-		this.indicesObjetosParaApagar = indicesObjetosParaApagar;
+	public void setIndicesObjetosSelecionados(Map<TipoPrimitivo, List<Integer>> indicesObjetosParaApagar) {
+		this.indicesSelecionados = indicesObjetosParaApagar;
 	}
 
 	public Poligono getPoligonoEmDesenho() {
@@ -99,12 +99,12 @@ public class Desenhador {
 
 	public void inicilizarEstruturasManipulacaoDeDesenhos(){
 		objetosDesenhados = new HashMap<>();
-		indicesObjetosParaApagar = new HashMap<>();
+		indicesSelecionados = new HashMap<>();
 		List<TipoPrimitivo> listEnum = Arrays.asList(TipoPrimitivo.values());
 		
 		for ( TipoPrimitivo tipoPrimitivo: listEnum) {
 			objetosDesenhados.put(tipoPrimitivo, new ArrayList<>());
-			indicesObjetosParaApagar.put(tipoPrimitivo, new ArrayList<>());
+			indicesSelecionados.put(tipoPrimitivo, new ArrayList<>());
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class Desenhador {
 		objetosDesenhados.forEach((tipoPrimitivo, objetos) -> {
 			for(Object desenho : objetos){
 				//verifica se objeto est� selecionado
-				boolean selecionado = (this.indicesObjetosParaApagar.get(tipoPrimitivo).contains(objetos.indexOf(desenho)))
+				boolean selecionado = (this.indicesSelecionados.get(tipoPrimitivo).contains(objetos.indexOf(desenho)))
 						? true
 						: false;
 				Color cor;
@@ -237,7 +237,7 @@ public class Desenhador {
 	}
 	
 	public void limparObjetosSelecionados() {
-		indicesObjetosParaApagar.forEach((tipoPrimitivo, indices)->{
+		indicesSelecionados.forEach((tipoPrimitivo, indices)->{
 			indices.clear();
 		});
 		desenharObjetosArmazenados(Color.WHITE);

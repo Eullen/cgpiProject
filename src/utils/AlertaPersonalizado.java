@@ -14,4 +14,14 @@ public class AlertaPersonalizado {
 		if(result.get() == ButtonType.YES)
 		     alertaImpl.alertaCallbak();
 	}
+	
+	public static void criarAlertaComCallback(String msg, AlertaCallback alertaImplSim, AlertaCallback alertaImplNao){
+		Alert alert = new Alert(AlertType.WARNING, msg, ButtonType.YES, ButtonType.NO);
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.YES)
+			alertaImplSim.alertaCallbak();
+		else if(result.get() == ButtonType.NO)
+			alertaImplNao.alertaCallbak();
+	}
 }

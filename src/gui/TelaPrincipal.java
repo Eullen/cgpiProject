@@ -30,6 +30,7 @@ import primitivos.Ponto;
 import primitivos.PontoGr;
 import primitivos.Reta;
 import primitivos.Retangulo;
+import transformadoresGeometricos.TipoTransformacao;
 import utils.AlertaCallback;
 import utils.AlertaPersonalizado;
 import utils.Figura;
@@ -63,12 +64,16 @@ public class TelaPrincipal {
 	private MenuItem menuClipping;
 	private MenuItem menuSelecionarAreaClipping;
 	private MenuItem menuDesfazerSelecaoClipping;
-	private MenuItem menuSelecionarObjTranformacao;
+	private MenuItem menuSelecionarObjTransformacao;
+	private MenuItem menuSelecionarPontoOrigemTransformacao;
 	private MenuItem menuTranslacao;
 	private MenuItem menuEscala;
 	private MenuItem menuRotacao;
 	private MenuItem menuAbrirArquivo;
 	private MenuItem menuSalvarArquivo;
+	private Spinner<Integer> escalaSx;
+	private Spinner<Integer> escalaSy;
+	private Spinner<Integer> angulosRotacao;
 	
 	private Canvas canvas;
 	private ControladorDeEventos controladorDeEventos;
@@ -97,43 +102,44 @@ public class TelaPrincipal {
         BorderPane pane = new BorderPane();
         
         //Criando Menu
-        menu 							= new MenuBar();
-        desenhoPontoPonto 				= new Menu("Desenho Ponto a Ponto");
-        desenhoElastico					= new Menu("Desenho com Elasticos");
-        clipping 						= new Menu("Clipping");
-        transformacoes 					= new Menu("Transformações Geométricas");
-        opcoes 							= new Menu("Opcoes");
-        arquivo 						= new Menu("Arquivo");
-        menuPontos 						= new MenuItem("Pontos");
-        menuRetas 						= new MenuItem("Retas");
-        menuCirculos 					= new MenuItem("Circulos");
-        menuLimpar 						= new MenuItem("Limpar");
-    	menuCurvaDragao 				= new MenuItem("Curva do Dragão");
-    	menuRetaElastica 				= new MenuItem("Retas");
-    	menuCirculoElastico 			= new MenuItem("Circulos");
-    	menuRetanguloElastico 			= new MenuItem("Retangulos");
-    	menuPoligonoElastico 			= new MenuItem("Poligonos");
-    	menuRetaPoligonalElastica 		= new MenuItem("Reta Poligonal");
-    	menuApagarPrimitivos 			= new MenuItem("Apagar Desenhos Selecionados");
-    	menuSelecionarPrimitivos 		= new MenuItem("Selecionar Formas Desenhadas");
-    	menuDesfazerSelecaoPrimitivos 	= new MenuItem("Desfazer Selecao de Formas");
-    	menuSelecionarAreaClipping 		= new MenuItem("Selecionar Área de Recorte");
-    	menuClipping 					= new MenuItem("Recortar");
-    	menuDesfazerSelecaoClipping 	= new MenuItem("Desfazer Seleção de Área");
-    	menuAbrirArquivo 				= new MenuItem("Abrir XML");
-    	menuSalvarArquivo 				= new MenuItem("Salvar em XML");
-    	menuSelecionarObjTranformacao	= new MenuItem("Selecionar Figura");
-    	menuRotacao 					= new MenuItem("Rotacionar Figura");
-    	menuTranslacao					= new MenuItem("Transladar Figura");
-    	menuEscala						= new MenuItem("Escalar Figura");
+        menu 							        = new MenuBar();
+        desenhoPontoPonto 				        = new Menu("Desenho Ponto a Ponto");
+        desenhoElastico					        = new Menu("Desenho com Elasticos");
+        clipping 						        = new Menu("Clipping");
+        transformacoes 					        = new Menu("TransformaÃ§Ãµes GeomÃ©tricas");
+        opcoes 							        = new Menu("Opcoes");
+        arquivo 						        = new Menu("Arquivo");
+        menuPontos 						        = new MenuItem("Pontos");
+        menuRetas 						        = new MenuItem("Retas");
+        menuCirculos 					        = new MenuItem("Circulos");
+        menuLimpar 						        = new MenuItem("Limpar");
+    	menuCurvaDragao 				        = new MenuItem("Curva do DragÃ£o");
+    	menuRetaElastica 				        = new MenuItem("Retas");
+    	menuCirculoElastico 			        = new MenuItem("Circulos");
+    	menuRetanguloElastico 			        = new MenuItem("Retangulos");
+    	menuPoligonoElastico 			        = new MenuItem("Poligonos");
+    	menuRetaPoligonalElastica 		        = new MenuItem("Reta Poligonal");
+    	menuApagarPrimitivos 			        = new MenuItem("Apagar Desenhos Selecionados");
+    	menuSelecionarPrimitivos 		        = new MenuItem("Selecionar Formas Desenhadas");
+    	menuDesfazerSelecaoPrimitivos 	        = new MenuItem("Desfazer Selecao de Formas");
+    	menuSelecionarAreaClipping 		        = new MenuItem("Selecionar Ã�rea de Recorte");
+    	menuClipping 					        = new MenuItem("Recortar");
+    	menuDesfazerSelecaoClipping 	        = new MenuItem("Desfazer SeleÃ§Ã£o de Ã�rea");
+    	menuAbrirArquivo 				        = new MenuItem("Abrir XML");
+    	menuSalvarArquivo 				        = new MenuItem("Salvar em XML");
+    	menuSelecionarObjTransformacao	        = new MenuItem("Selecionar Figura");
+    	menuSelecionarPontoOrigemTransformacao  = new MenuItem("Escolher Ponto de Referência para Transformação");
+    	menuRotacao 					        = new MenuItem("Rotacionar Figura");
+    	menuTranslacao					        = new MenuItem("Transladar Figura");
+    	menuEscala						        = new MenuItem("Escalar Figura");
     	
     	desenhoPontoPonto.getItems().addAll(menuPontos,menuRetas,menuCirculos, menuCurvaDragao);
     	desenhoElastico.getItems().addAll(menuRetaElastica, menuCirculoElastico, menuRetanguloElastico, menuPoligonoElastico, menuRetaPoligonalElastica);
     	opcoes.getItems().addAll(menuSelecionarPrimitivos,menuDesfazerSelecaoPrimitivos,menuApagarPrimitivos,menuLimpar);
     	arquivo.getItems().addAll(menuAbrirArquivo, menuSalvarArquivo);
     	clipping.getItems().addAll(menuSelecionarAreaClipping,menuDesfazerSelecaoClipping,menuClipping);
-    	transformacoes.getItems().addAll(menuSelecionarObjTranformacao, menuRotacao, menuTranslacao, menuEscala);
-    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,arquivo,clipping,opcoes);
+    	transformacoes.getItems().addAll(menuSelecionarPontoOrigemTransformacao,menuSelecionarObjTransformacao, menuRotacao, menuTranslacao, menuEscala);
+    	menu.getMenus().addAll(desenhoPontoPonto,desenhoElastico,transformacoes,arquivo,clipping,opcoes);
 
     	
     	//Criando footer
@@ -199,14 +205,16 @@ public class TelaPrincipal {
 			controladorDeEventos.setTipoDesenho(TipoDesenho.SELECIONA_DESENHO);
 		});
 		this.menuDesfazerSelecaoPrimitivos.setOnAction(e -> {
+			controladorDeEventos.setTransformacaoEmAndamento(false);
 			controladorDeEventos.desfazerSelecao();
 		});
 		this.menuApagarPrimitivos.setOnAction(ev ->{
 			
-			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacao resulta na perda de todos os desenhos selecionados.\n "
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacão resulta na perda de todos os desenhos selecionados.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
+							controladorDeEventos.setTransformacaoEmAndamento(false);
 							controladorDeEventos.apagarPrimitivos();
 						}
 					});
@@ -224,12 +232,12 @@ public class TelaPrincipal {
 			this.controladorDeEventos.recortar();
 		});
 		
-		
 		this.menuAbrirArquivo.setOnAction(ev -> {
-			AlertaPersonalizado.criarAlertaComCallback("A execu��o dessa operacao resulta na perda de todos os desenhos n�o salvos.\n "
+			AlertaPersonalizado.criarAlertaComCallback("A execução dessa operacão resulta na perda de todos os desenhos não salvos.\n "
 					+ "Deseja continuar?", new AlertaCallback() {				
 						@Override
 						public void alertaCallbak() {
+							controladorDeEventos.setTransformacaoEmAndamento(false);
 							abriXML();
 						}
 					});
@@ -260,9 +268,33 @@ public class TelaPrincipal {
 			}
 		});
 		
+		
+		this.menuSelecionarPontoOrigemTransformacao.setOnAction(ev -> {
+			controladorDeEventos.setTipoTransformacao(TipoTransformacao.SELECAO_PONTO);
+		});
+		
+		this.menuSelecionarObjTransformacao.setOnAction(ev -> {
+			controladorDeEventos.setTipoTransformacao(TipoTransformacao.SELECAO_FIGURA);
+		});
+		
+		this.menuTranslacao.setOnAction(ev -> {
+			controladorDeEventos.setTipoTransformacao(TipoTransformacao.TRANSLACAO);
+		});
+		
+		this.menuEscala.setOnAction(ev -> {
+			//controladorDeEventos.setTipoTransformacao(TipoTransformacao.ESCALA);
+			if (this.controladorDeEventos.getTransformadorGeometrico().getFigura() != null){
+				this.controladorDeEventos.getDesenhador().desenharPontos(controladorDeEventos.getTransformadorGeometrico().escalarFigura(),Color.GREENYELLOW);
+			}
+		});
+		
+		this.menuRotacao.setOnAction(ev -> {
+			controladorDeEventos.setTipoTransformacao(TipoTransformacao.ROTACAO);
+		});
+		
 		// canvas
 		canvas.setOnMouseMoved(event -> {
-			palco.setTitle("(Posi??o do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
+			palco.setTitle("(Posição do Cursor):" + " (" + (int) event.getX() + ", " + (int) event.getY() + ")");
 		});
 		canvas.setOnMousePressed(event -> {
 			controladorDeEventos.onCanvasMousePressed(event);
@@ -300,15 +332,15 @@ public class TelaPrincipal {
 			controladorDeEventos.getDesenhador().setDiametro(diametros.getValue());
 		});
 		
-		Spinner<Integer> angulosRotacao = new Spinner<Integer>();
+		angulosRotacao = new Spinner<Integer>();
 		SpinnerValueFactory<Integer> angulos = new SpinnerValueFactory.IntegerSpinnerValueFactory(-90, 90 , 45);
 		angulosRotacao.setValueFactory(angulos);
 		angulosRotacao.setMaxWidth(80);
 		angulosRotacao.valueProperty().addListener(e -> {
-			this.controladorDeEventos.getTransformadorGeometrico().setAnguloRotacao(angulos.getValue());
+			
 		});
 		
-		Spinner<Integer> escalaSx = new Spinner<Integer>();
+		escalaSx = new Spinner<Integer>();
 		SpinnerValueFactory<Integer> valoresSx = new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10 , 0);
 		escalaSx.setValueFactory(valoresSx);
 		escalaSx.setMaxWidth(80);
@@ -316,7 +348,7 @@ public class TelaPrincipal {
 			this.controladorDeEventos.getTransformadorGeometrico().setEscalaX(escalaSx.getValue());
 		});
 		
-		Spinner<Integer> escalaSy = new Spinner<Integer>();
+		escalaSy = new Spinner<Integer>();
 		SpinnerValueFactory<Integer> valoresSy = new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10 , 0);
 		escalaSy.setValueFactory(valoresSy);
 		escalaSy.setMaxWidth(80);
@@ -329,7 +361,7 @@ public class TelaPrincipal {
 		grid.add(colorPicker, 1, 0);
 		grid.add(new Label("Diametro: "), 2, 0);
 		grid.add(diametroLinhas, 3, 0);
-		grid.add(new Label("Ângulo: "), 4, 0);
+		grid.add(new Label("Ã‚ngulo: "), 4, 0);
 		grid.add(angulosRotacao, 5, 0);
 		grid.add(new Label("Escala Sx: "), 6, 0);
 		grid.add(escalaSx, 7, 0);

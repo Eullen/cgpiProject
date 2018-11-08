@@ -19,7 +19,6 @@ public class Escala {
 		this.pontosDaFigura = pontosDaFigura;
 	}
 
-
 	public Escala(Ponto pontoReferencia, int sx, int sy, List<Ponto> pontosDaFigura) {
 		this.pontoReferencia = pontoReferencia;
 		Sx = sx;
@@ -62,8 +61,11 @@ public class Escala {
 	public List<Ponto> aplicarRotacao(){
 		List<Ponto> pontosTransladados = new ArrayList<>();
 		this.pontosDaFigura.forEach(pt -> {	
-			double x = pt.getx();
-			double y = pt.gety();
+//			Definição matemática
+//			x’= x.Sx + xf(1-Sx)
+//			y’= y.Sy + yf(1-Sy)
+			double x = (pt.getx()*Sx)+(pontoReferencia.getx()*(1-Sx));
+			double y = (pt.gety()*Sy)+(pontoReferencia.gety()*(1-Sy));
 			pontosTransladados.add(new Ponto(x,y));
 		});
 		return pontosTransladados;
