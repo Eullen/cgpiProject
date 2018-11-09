@@ -15,6 +15,7 @@ import primitivos.Ponto;
 import primitivos.Reta;
 import primitivos.Retangulo;
 import transformadoresGeometricos.Escala;
+import transformadoresGeometricos.Rotacao;
 import transformadoresGeometricos.TipoTransformacao;
 import transformadoresGeometricos.Translacao;
 
@@ -22,8 +23,8 @@ public class TransformadorGeometrico {
 	
 	private Ponto pontoReferecia;
 	private int anguloRotacao;
-	private int escalaX;
-	private int escalaY;
+	private double escalaX;
+	private double escalaY;
 	private Object figura;
 	
 	
@@ -60,49 +61,23 @@ public class TransformadorGeometrico {
 		this.anguloRotacao = anguloRotacao;
 	}
 	
-	public int getEscalaX() {
+	public double getEscalaX() {
 		return escalaX;
 	}
 	
-	public void setEscalaX(int escalaX) {
+	public void setEscalaX(double escalaX) {
 		this.escalaX = escalaX;
 	}
 	
-	public int getEscalaY() {
+	public double getEscalaY() {
 		return escalaY;
 	}
 	
-	public void setEscalaY(int escalaY) {
+	public void setEscalaY(double escalaY) {
 		this.escalaY = escalaY;
 	}
 	
-//	
-//	public List<Ponto> transladarFigura(TipoPrimitivo tipoPrimitivo){
-//		Translacao translacao;
-//		switch(tipoPrimitivo) {
-//			case CIRCULO:
-//				Circulo circulo = (Circulo) figura;
-//				translacao = new Translacao(CirculoCalculador.obterPontos((circulo)));
-//				return translacao.aplicarTranslacao();
-//			case LINHA_POLIGONAL:
-//			case POLIGONO:
-//				Poligono poligono = (Poligono) figura;
-//				translacao = new Translacao(PoligonoCalculador.obterPontos((poligono)));
-//				return translacao.aplicarTranslacao();
-//			case RETA:
-//				Reta reta = (Reta) figura;
-//				translacao = new Translacao(RetaCalculador.obterPontos((reta)));
-//				return translacao.aplicarTranslacao();
-//			case RETANGULO:
-//				Retangulo retangulo = (Retangulo) figura;
-//				translacao = new Translacao(RetanguloCalculador.obterPontos((retangulo)));
-//				return translacao.aplicarTranslacao();
-//		}
-//		// NÃ£o deve cair aqui
-//		return null;
-//	}
-//	
-	public List<Ponto> escalarFigura(){
+	public List<Ponto> transformarFigura(TipoTransformacao tipoTransformacao){
 		List<Ponto> pontosDaFigura = new ArrayList<>();
 		switch(figura.getClass().getSimpleName()) {
 			case "Circulo":
@@ -123,7 +98,25 @@ public class TransformadorGeometrico {
 				pontosDaFigura = RetanguloCalculador.obterPontos(retangulo);
 				break;
 		}
-		Escala escala = new Escala(this.pontoReferecia, escalaX, escalaY, pontosDaFigura);
-		return escala.aplicarRotacao();
+		
+		return aplicarTransformacao(tipoTransformacao, pontosDaFigura);
+
 	}
+	
+	public List<Ponto> aplicarTransformacao(TipoTransformacao tipoTransformacao, List<Ponto> pontosDaFigura){
+		switch (tipoTransformacao) {
+			case ESCALA:
+				Escala escala = new Escala(this.pontoReferecia, escalaX, escalaY, pontosDaFigura);
+				return escala.aplicarEscala();
+			case ROTACAO:
+				Rotacao rotacao = new Rotacao(this.pontoReferecia,pontosDaFigura, anguloRotacao);
+				return rotacao.aplicarRotacao();
+			case TRANSLACAO:
+				Translacao translacao = new Translacao(pontosDaFigura, pontoReferecia);
+				return translacao.aplicarTranslacao();
+		}
+		//Não deve cair nesse return
+		return pontosDaFigura;
+	}
+	
 }

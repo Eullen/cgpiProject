@@ -204,7 +204,7 @@ public class Desenhador {
 		//desenha todos os objetos
 		objetosDesenhados.forEach((tipoPrimitivo, objetos) -> {
 			for(Object desenho : objetos){
-				//verifica se objeto est� selecionado
+				//verifica se objeto esta selecionado
 				boolean selecionado = (this.indicesSelecionados.get(tipoPrimitivo).contains(objetos.indexOf(desenho)))
 						? true
 						: false;

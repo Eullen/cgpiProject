@@ -1,9 +1,9 @@
 ## Alunos
 Eullen Silva 
 Arthur Carvalho
-João Marcelo Ferreira
+Joao Marcelo Ferreira
 
-## Especificações da Atividade 
+## Especificacoes da Atividade 
 
 ## Tarefa 1
 
@@ -13,39 +13,44 @@ João Marcelo Ferreira
      
         Utilizando dois pontos desenhar um segmento.
 
-- Círculo
+- Circulo
 
          Utilizando ponto do centro e segundo ponto para definir o raio, entÃ£o desenhar o cÃ­rculo.
 
 
 ## Tarefa 2
 
-Desenhar a curva do dragão usando os componentes desenvolvidos na tarefa 1.
+Desenhar a curva do dragao usando os componentes desenvolvidos na tarefa 1.
 
 ## Tarefa 3
 
-Descrição: nesta atividade, deverá ser implementado um desenhador de figuras 2D. Estas
-figuras são compostas pelos seguintes primitivos básicos:
+Descricao: nesta atividade, devera ser implementado um desenhador de figuras 2D. Estas
+figuras sao compostas pelos seguintes primitivos basicos:
+sas
+* Reta
+* Circulo
+* Retangulo
+* Poli�gono: conjunto de segmentos de retas. Fechado.
+* Linha poligonal: conjunto de segmentos de retas. Aberto.
+* Selecao de um primitivo.
+* Apagar um primitivo selecionado.
+* Apagar todo o desenho.
 
-	• Reta
-	• Circulo
-	• Retângulo
-	• Polígono: conjunto de segmentos de retas. Fechado.
-	• “linha poligonal”: conjunto de segmentos de retas. Aberto.
-	• Seleção de um primitivo.
-	• Apagar um primitivo selecionado.
-	• Apagar todo o desenho.
-
-Para desenhar cada primitivo, deverá ser utilizado o “rubber-band” (elástico) para auxiliar
-o usuário no posicionamento destes elementos na figura
+Para desenhar cada primitivo, devera ser utilizado o rubber-band (elastico) para auxiliar
+o usuario no posicionamento destes elementos na figura
 
 ## Tarefa 3.1
 
-Operações do desenhador 2D:
+Operacoes do desenhador 2D:
 	
-	• “Clipping” de um trecho retangular da figura. Neste caso, o usuário seleciona uma 
-	área retangular sobre o desenho que está desenhada e depois, uma nova janela 
-	deverá ser utilizada para mostrar apenas os elementos contidos nesta área.
-	• Salvar em xml (vide exemplo na página da disciplina)
-	• Ler um xml
+* Clipping de um trecho retangular da figura. Neste caso, o usuário seleciona uma Area retangular sobre o desenho que esta desenhada e depois, uma nova janela devera ser utilizada para mostrar apenas os elementos contidos nesta area.
+* Salvar em xml (vide exemplo na pagina da disciplina)
+* Ler um xml
+
+## Tarefa 4
+
+Transformacoes Geometricas
+- Rotacao (Origem e Ponto Aleatorio)
+- Escala (Origem e Ponto Aleatorio)
+- Translacao (Origem e Ponto Aleatorio)
 	

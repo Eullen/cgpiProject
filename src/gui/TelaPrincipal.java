@@ -71,8 +71,8 @@ public class TelaPrincipal {
 	private MenuItem menuRotacao;
 	private MenuItem menuAbrirArquivo;
 	private MenuItem menuSalvarArquivo;
-	private Spinner<Integer> escalaSx;
-	private Spinner<Integer> escalaSy;
+	private Spinner<Double> escalaSx;
+	private Spinner<Double> escalaSy;
 	private Spinner<Integer> angulosRotacao;
 	
 	private Canvas canvas;
@@ -161,7 +161,7 @@ public class TelaPrincipal {
 		
 	}
 	
-	// Vincula??o dos componentes do MENU aos eventos declarados no ControladorDeEventos de componentes gr?ficos.
+	// Vincula??o dos componentes do MENU aos eventos declarados no ControladorDeEventos de componentes grasficos.
 	private void atribuirEventosAosComponentesGraficos() {
 		// menu
 		this.menuRetas.setOnAction(e -> {
@@ -278,18 +278,21 @@ public class TelaPrincipal {
 		});
 		
 		this.menuTranslacao.setOnAction(ev -> {
-			controladorDeEventos.setTipoTransformacao(TipoTransformacao.TRANSLACAO);
+			if (this.controladorDeEventos.getTransformadorGeometrico().getFigura() != null){
+				this.controladorDeEventos.getDesenhador().desenharPontos(controladorDeEventos.getTransformadorGeometrico().transformarFigura(TipoTransformacao.TRANSLACAO),Color.GREENYELLOW);
+			}
 		});
 		
 		this.menuEscala.setOnAction(ev -> {
-			//controladorDeEventos.setTipoTransformacao(TipoTransformacao.ESCALA);
 			if (this.controladorDeEventos.getTransformadorGeometrico().getFigura() != null){
-				this.controladorDeEventos.getDesenhador().desenharPontos(controladorDeEventos.getTransformadorGeometrico().escalarFigura(),Color.GREENYELLOW);
+				this.controladorDeEventos.getDesenhador().desenharPontos(controladorDeEventos.getTransformadorGeometrico().transformarFigura(TipoTransformacao.ESCALA),Color.GREENYELLOW);
 			}
 		});
 		
 		this.menuRotacao.setOnAction(ev -> {
-			controladorDeEventos.setTipoTransformacao(TipoTransformacao.ROTACAO);
+			if (this.controladorDeEventos.getTransformadorGeometrico().getFigura() != null){
+				this.controladorDeEventos.getDesenhador().desenharPontos(controladorDeEventos.getTransformadorGeometrico().transformarFigura(TipoTransformacao.ROTACAO),Color.GREENYELLOW);
+			}
 		});
 		
 		// canvas
@@ -333,23 +336,23 @@ public class TelaPrincipal {
 		});
 		
 		angulosRotacao = new Spinner<Integer>();
-		SpinnerValueFactory<Integer> angulos = new SpinnerValueFactory.IntegerSpinnerValueFactory(-90, 90 , 45);
+		SpinnerValueFactory<Integer> angulos = new SpinnerValueFactory.IntegerSpinnerValueFactory(-90, 90 , 45, 15);
 		angulosRotacao.setValueFactory(angulos);
 		angulosRotacao.setMaxWidth(80);
 		angulosRotacao.valueProperty().addListener(e -> {
-			
+			this.controladorDeEventos.getTransformadorGeometrico().setAnguloRotacao(angulosRotacao.getValue());
 		});
 		
-		escalaSx = new Spinner<Integer>();
-		SpinnerValueFactory<Integer> valoresSx = new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10 , 0);
+		escalaSx = new Spinner<Double>();
+		SpinnerValueFactory<Double> valoresSx = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 5, 1, 0.1);
 		escalaSx.setValueFactory(valoresSx);
 		escalaSx.setMaxWidth(80);
 		escalaSx.valueProperty().addListener(e -> {
 			this.controladorDeEventos.getTransformadorGeometrico().setEscalaX(escalaSx.getValue());
 		});
 		
-		escalaSy = new Spinner<Integer>();
-		SpinnerValueFactory<Integer> valoresSy = new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10 , 0);
+		escalaSy = new Spinner<Double>();
+		SpinnerValueFactory<Double> valoresSy = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 5, 1, 0.1);
 		escalaSy.setValueFactory(valoresSy);
 		escalaSy.setMaxWidth(80);
 		escalaSy.valueProperty().addListener(e -> {

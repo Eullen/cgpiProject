@@ -309,13 +309,6 @@ public class ControladorDeEventos {
 	
 	private void onCanvasMousePressedTransformacao(MouseEvent event, Ponto pontoClicado){
 		switch(tipoTransformacao){
-			case ESCALA:
-			case ROTACAO:
-			case TRANSLACAO:
-				if (this.transformadorGeometrico.getFigura() != null){
-					desenharFiguraTransformada();
-				}
-				break;
 			case SELECAO_FIGURA:
 				onCanvasMousePressedSelecionarPrimitivo(pontoClicado);
 				break;
@@ -324,22 +317,7 @@ public class ControladorDeEventos {
 				break;	
 		}
 	}
-	
-	private void desenharFiguraTransformada(){
-		if (this.transformadorGeometrico.getFigura() != null){
-			switch(tipoTransformacao){
-				case ESCALA:
-					this.desenhador.desenharPontos(transformadorGeometrico.escalarFigura(),Color.GREENYELLOW);
-					break;
-				case ROTACAO:
-					break;
-				case TRANSLACAO:
-					break;
-				
-			}
-		}
-	}
-	
+		
 	public void getEventoBasicoMenuDesenho(TipoDesenho desenho) {
 		tipoDesenho = desenho;
 		resetCanvas();

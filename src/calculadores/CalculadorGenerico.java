@@ -13,7 +13,7 @@ public class CalculadorGenerico {
 	
 	public static double obterDistanciaEntreDoisPontos(Ponto pontoA, Ponto pontoB){
 		/*
-		 * Fórmula da distacia entre dois pontos
+		 * Fórmula da distancia entre dois pontos
 		 * dAB = sqtr( ((x2 - x1) ^2 ) + ((y2 - y1) ^2 ) )
 		 */
 		double deltaX = pontoB.getx() - pontoA.getx();

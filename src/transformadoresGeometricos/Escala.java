@@ -8,18 +8,18 @@ import primitivos.Ponto;
 public class Escala {
 
 	private Ponto pontoReferencia;
-	private int Sx;
-	private int Sy;
+	private double Sx;
+	private double Sy;
 	private List<Ponto> pontosDaFigura;
 
-	public Escala(int sx, int sy, List<Ponto> pontosDaFigura) {
+	public Escala(double sx, double sy, List<Ponto> pontosDaFigura) {
 		this.pontoReferencia = new Ponto(0,0);
 		Sx = sx;
 		Sy = sy;
 		this.pontosDaFigura = pontosDaFigura;
 	}
 
-	public Escala(Ponto pontoReferencia, int sx, int sy, List<Ponto> pontosDaFigura) {
+	public Escala(Ponto pontoReferencia, double sx, double sy, List<Ponto> pontosDaFigura) {
 		this.pontoReferencia = pontoReferencia;
 		Sx = sx;
 		Sy = sy;
@@ -42,23 +42,23 @@ public class Escala {
 		this.pontoReferencia = pontoReferencia;
 	}
 
-	public int getSx() {
+	public double getSx() {
 		return Sx;
 	}
 
-	public void setSx(int sx) {
+	public void setSx(double sx) {
 		Sx = sx;
 	}
 
-	public int getSy() {
+	public double getSy() {
 		return Sy;
 	}
 
-	public void setSy(int sy) {
+	public void setSy(double sy) {
 		Sy = sy;
 	}
 	
-	public List<Ponto> aplicarRotacao(){
+	public List<Ponto> aplicarEscala(){
 		List<Ponto> pontosTransladados = new ArrayList<>();
 		this.pontosDaFigura.forEach(pt -> {	
 //			Definição matemática

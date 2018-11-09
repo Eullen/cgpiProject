@@ -15,12 +15,6 @@ public class Translacao {
 		this.setPontosDaFigura(pontosDaFigura);
 		this.setPontoReferencia(pontoReferencia);
 	}
-	
-	public Translacao(List<Ponto> pontosDaFigura) {
-		super();
-		this.setPontosDaFigura(pontosDaFigura);
-		this.setPontoReferencia(new Ponto(0,0));
-	}
 
 	public Ponto getPontoReferencia() {
 		return pontoReferencia;
@@ -40,10 +34,15 @@ public class Translacao {
 	
 	public List<Ponto> aplicarTranslacao(){
 		List<Ponto> pontosTransladados = new ArrayList<>();
+		Ponto ptRefCalculo = pontosDaFigura.get(0);
+		double tx = pontoReferencia.getx() - ptRefCalculo.getx();
+		double ty = pontoReferencia.gety() - ptRefCalculo.gety();;
 		this.pontosDaFigura.forEach(pt -> {
-			// TODO: Ajustar AQUI
-			double x = pt.getx()+10;
-			double y = pt.gety()+10;
+			//Referência
+//			x’=x+tx, 
+//			y’= y+ty
+			double x = pt.getx()+tx;
+			double y = pt.gety()+ty;
 			pontosTransladados.add(new Ponto(x,y));
 		});
 		return pontosTransladados;
