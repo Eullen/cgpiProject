@@ -45,17 +45,19 @@ public class Rotacao {
 		List<Ponto> pontosTransladados = new ArrayList<>();
 		
 		//Rotacionar figura
-//		x’= xR + (x-xR)cosA - (y-yR)senA
-//		y’= yR + (x-xR)senA + (y-yR)cosA
-//		Onde A é o angulo de rotação
+//		x'= xR + (x-xR)cosA - (y-yR)senA
+//		y'= yR + (x-xR)senA + (y-yR)cosA
+//		Onde A e o angulo de rotacao
+		
+		double radiano = Math.toRadians(angulo);
 		
 		this.pontosDaFigura.forEach(pt -> {	
 			double x = pontoReferencia.getx() 
-						+ ((pt.getx()- pontoReferencia.getx())*Math.cos(angulo))
-						- ((pt.gety() - pontoReferencia.gety())*Math.sin(angulo));
+						+ ((pt.getx()- pontoReferencia.getx())*Math.cos(radiano))
+						- ((pt.gety() - pontoReferencia.gety())*Math.sin(radiano));
 			double y = pontoReferencia.gety() 
-					+ ((pt.getx()- pontoReferencia.getx())*Math.sin(angulo))
-					- ((pt.gety() - pontoReferencia.gety())*Math.cos(angulo));
+					+ ((pt.getx()- pontoReferencia.getx())*Math.sin(radiano))
+					+ ((pt.gety() - pontoReferencia.gety())*Math.cos(radiano));
 			pontosTransladados.add(new Ponto(x,y));
 		});
 		return pontosTransladados;

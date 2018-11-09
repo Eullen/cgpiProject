@@ -106,7 +106,7 @@ public class TelaPrincipal {
         desenhoPontoPonto 				        = new Menu("Desenho Ponto a Ponto");
         desenhoElastico					        = new Menu("Desenho com Elasticos");
         clipping 						        = new Menu("Clipping");
-        transformacoes 					        = new Menu("TransformaÃ§Ãµes GeomÃ©tricas");
+        transformacoes 					        = new Menu("Transformacoes Geometricas");
         opcoes 							        = new Menu("Opcoes");
         arquivo 						        = new Menu("Arquivo");
         menuPontos 						        = new MenuItem("Pontos");
@@ -122,13 +122,13 @@ public class TelaPrincipal {
     	menuApagarPrimitivos 			        = new MenuItem("Apagar Desenhos Selecionados");
     	menuSelecionarPrimitivos 		        = new MenuItem("Selecionar Formas Desenhadas");
     	menuDesfazerSelecaoPrimitivos 	        = new MenuItem("Desfazer Selecao de Formas");
-    	menuSelecionarAreaClipping 		        = new MenuItem("Selecionar Ã�rea de Recorte");
+    	menuSelecionarAreaClipping 		        = new MenuItem("Selecionar Area de Recorte");
     	menuClipping 					        = new MenuItem("Recortar");
-    	menuDesfazerSelecaoClipping 	        = new MenuItem("Desfazer SeleÃ§Ã£o de Ã�rea");
+    	menuDesfazerSelecaoClipping 	        = new MenuItem("Desfazer Selecao de Area");
     	menuAbrirArquivo 				        = new MenuItem("Abrir XML");
     	menuSalvarArquivo 				        = new MenuItem("Salvar em XML");
     	menuSelecionarObjTransformacao	        = new MenuItem("Selecionar Figura");
-    	menuSelecionarPontoOrigemTransformacao  = new MenuItem("Escolher Ponto de Referência para Transformação");
+    	menuSelecionarPontoOrigemTransformacao  = new MenuItem("Escolher Ponto de Referência para Transformacao");
     	menuRotacao 					        = new MenuItem("Rotacionar Figura");
     	menuTranslacao					        = new MenuItem("Transladar Figura");
     	menuEscala						        = new MenuItem("Escalar Figura");
@@ -364,7 +364,7 @@ public class TelaPrincipal {
 		grid.add(colorPicker, 1, 0);
 		grid.add(new Label("Diametro: "), 2, 0);
 		grid.add(diametroLinhas, 3, 0);
-		grid.add(new Label("Ã‚ngulo: "), 4, 0);
+		grid.add(new Label("Angulo: "), 4, 0);
 		grid.add(angulosRotacao, 5, 0);
 		grid.add(new Label("Escala Sx: "), 6, 0);
 		grid.add(escalaSx, 7, 0);
